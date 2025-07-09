@@ -14,7 +14,6 @@ export default function ProfileScreen({ navigation }: Props) {
     <View style={styles.container}>
       <StatusBar style="auto" />
 
-      {/* Avatar */}
       <View style={styles.avatarWrapper}>
         <Image
           source={{ uri: "https://randomuser.me/api/portraits/men/54.jpg" }}
@@ -22,11 +21,9 @@ export default function ProfileScreen({ navigation }: Props) {
         />
       </View>
 
-      {/* Nom + Pseudo */}
       <Text style={styles.name}>John Doe</Text>
       <Text style={styles.handle}>@johndoe</Text>
 
-      {/* Stats */}
       <View style={styles.statsContainer}>
         <View style={styles.statItem}>
           <Text style={styles.statNumber}>12</Text>
@@ -42,7 +39,6 @@ export default function ProfileScreen({ navigation }: Props) {
         </View>
       </View>
 
-      {/* Tabs */}
       <View style={styles.toggleTabs}>
         <TouchableOpacity onPress={() => setActiveTab('images')}>
           <Ionicons
@@ -60,7 +56,6 @@ export default function ProfileScreen({ navigation }: Props) {
         </TouchableOpacity>
       </View>
 
-      {/* Content (preview only) */}
       <View style={styles.contentPreview}>
         <Text style={styles.previewText}>
           {activeTab === 'images' ? 'Galerie d’images' : 'Favoris'}
