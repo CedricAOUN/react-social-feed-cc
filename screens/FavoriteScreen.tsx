@@ -8,7 +8,7 @@ type Props = NativeStackScreenProps<RouteParamList, 'Favorites'>;
 export default function FavoriteScreen({ navigation }: Props) {
   return (
     <View style={styles.container}>
-      <Text>Favorites Screen</Text>
+      <Text style={styles.title}>Favorites Screen</Text>
       <StatusBar style="auto" />
     </View>
   );
@@ -20,5 +20,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+    title: {
+    fontFamily: 'Poppins_700Bold',
+    fontSize: 18,
   },
 });

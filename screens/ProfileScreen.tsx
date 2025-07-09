@@ -8,7 +8,7 @@ type Props = NativeStackScreenProps<RouteParamList, 'Profile'>;
 export default function ProfileScreen({ navigation }: Props) {
   return (
     <View style={styles.container}>
-      <Text>Profile Screen</Text>
+      <Text style={styles.title}>Profile Screen</Text>
       <StatusBar style="auto" />
     </View>
   );
@@ -20,5 +20,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+    title: {
+    fontFamily: 'Poppins_700Bold',
+    fontSize: 18,
   },
 });

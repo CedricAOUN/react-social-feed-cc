@@ -8,7 +8,7 @@ type Props = NativeStackScreenProps<RouteParamList, 'Conversations'>;
 export default function ConversationsScreen({ navigation }: Props) {
   return (
     <View style={styles.container}>
-      <Text>Conversations Screen</Text>
+      <Text style={styles.title}>Conversations Screen</Text>
       <StatusBar style="auto" />
     </View>
   );
@@ -20,5 +20,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  title: {
+    fontFamily: 'Poppins_700Bold',
+    fontSize: 18,
   },
 });
