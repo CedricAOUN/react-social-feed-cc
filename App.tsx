@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { Button, StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Modal } from 'react-native';
 import { RouteParamList } from './routes';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import FavoriteScreen from './screens/FavoriteScreen';
@@ -10,21 +10,19 @@ import { NavigationContainer } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { Poppins_400Regular, Poppins_700Bold } from '@expo-google-fonts/poppins';
 import { Ionicons } from '@expo/vector-icons';
-
+import { useState } from 'react';
 
 const Tab = createBottomTabNavigator<RouteParamList>();
 
 const CustomButton = ({ onPress }: { onPress: () => void }) => (
-  <TouchableOpacity
-    style={styles.customButton}
-    onPress={onPress}
-    activeOpacity={0.7}
-  >
+  <TouchableOpacity style={styles.customButton} onPress={onPress} activeOpacity={0.7}>
     <Ionicons style={styles.buttonIcon} name="add-circle-outline" size={24} color="white" />
   </TouchableOpacity>
 );
 
 export default function App() {
+  const [modalVisible, setModalVisible] = useState(false);
+
   const [fontsLoaded] = useFonts({
     Poppins_400Regular,
     Poppins_700Bold,
@@ -35,84 +33,101 @@ export default function App() {
   }
 
   const handleCustomButtonPress = () => {
-    Alert.alert('Custom Button', 'You pressed the custom button!');
-    // Add your custom logic here - could open a modal, create new post, etc.
+    setModalVisible(true);
   };
 
   return (
-    <NavigationContainer>
-      <StatusBar style="auto" />
-      <Tab.Navigator
-        screenOptions={{
-          tabBarLabelStyle: {
-            fontFamily: 'Poppins_700Bold',
-            fontSize: 10,
-          },
-          headerTitleStyle: {
-            fontFamily: 'Poppins_700Bold',
-            fontSize: 18,
-          },
-          tabBarStyle: { 
-            height: 110,
-          }
-        }}
+    <>
+      <NavigationContainer>
+        <StatusBar style="auto" />
+        <Tab.Navigator
+          screenOptions={{
+            tabBarLabelStyle: {
+              fontFamily: 'Poppins_700Bold',
+              fontSize: 10,
+            },
+            headerTitleStyle: {
+              fontFamily: 'Poppins_700Bold',
+              fontSize: 18,
+            },
+            tabBarStyle: {
+              height: 110,
+            },
+          }}
+        >
+          <Tab.Screen
+            name="Feed"
+            component={FeedScreen}
+            options={{
+              tabBarIcon: ({ color, size }) => (
+                <Ionicons name="home" color={color} size={size} />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="Conversations"
+            component={ConversationsScreen}
+            options={{
+              tabBarIcon: ({ color, size }) => (
+                <Ionicons name="chatbubble-outline" color={color} size={size} />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="Add"
+            component={View}
+            options={{
+              tabBarButton: () => (
+                <CustomButton onPress={handleCustomButtonPress} />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="Favorites"
+            component={FavoriteScreen}
+            options={{
+              tabBarIcon: ({ color, size }) => (
+                <Ionicons name="heart-outline" color={color} size={size} />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="Profile"
+            component={ProfileScreen}
+            options={{
+              tabBarIcon: ({ color, size }) => (
+                <Ionicons name="person-circle-outline" color={color} size={size} />
+              ),
+            }}
+          />
+        </Tab.Navigator>
+      </NavigationContainer>
+
+      {/* Custom Modal */}
+      <Modal
+        animationType="fade"
+        transparent
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
       >
-        <Tab.Screen 
-          name="Feed" 
-          component={FeedScreen} 
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="home" color={color} size={size} />
-            )
-          }}
-        />
-        <Tab.Screen 
-          name="Conversations" 
-          component={ConversationsScreen} 
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="chatbubble-outline" color={color} size={size} />
-            )
-          }}
-        />
-        <Tab.Screen 
-          name="Add" 
-          component={View}
-          options={{
-            tabBarButton: () => (
-              <CustomButton onPress={handleCustomButtonPress} />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Favorites"
-          component={FavoriteScreen}
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="heart-outline" color={color} size={size} />
-            )
-          }}
-        />
-        <Tab.Screen
-          name="Profile"
-          component={ProfileScreen}
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="person-circle-outline" color={color} size={size} />
-            )
-          }}
-        />
-      </Tab.Navigator>
-    </NavigationContainer>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalTitle}>Bouton personnalisé</Text>
+            <Text style={styles.modalText}>Tu as appuyé sur le bouton central !</Text>
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={styles.closeButtonText}>Fermer</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  loaderContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   customButton: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -137,5 +152,40 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     transform: [{ rotateZ: '-45deg' }],
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.4)',
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 15,
+    padding: 25,
+    alignItems: 'center',
+    elevation: 10,
+  },
+  modalTitle: {
+    fontFamily: 'Poppins_700Bold',
+    fontSize: 20,
+    marginBottom: 10,
+  },
+  modalText: {
+    fontFamily: 'Poppins_400Regular',
+    fontSize: 16,
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  closeButton: {
+    backgroundColor: '#404040',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 8,
+  },
+  closeButtonText: {
+    fontFamily: 'Poppins_700Bold',
+    fontSize: 14,
+    color: 'white',
   },
 });
