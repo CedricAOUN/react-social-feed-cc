@@ -1,20 +1,29 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, View } from 'react-native';
+import { RouteParamList } from './routes';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import FavoriteScreen from './screens/FavoriteScreen';
+import FeedScreen from './screens/FeedScreen';
+import ConversationsScreen from './screens/ConversationScreen';
+import ProfileScreen from './screens/ProfileScreen';
+import { NavigationContainer } from '@react-navigation/native';
 
+
+const Tab = createBottomTabNavigator<RouteParamList>();
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
+    <NavigationContainer>
       <StatusBar style="auto" />
-    </View>
+      <Tab.Navigator>
+        <Tab.Screen name="Feed" component={FeedScreen} />
+        <Tab.Screen name="Conversations" component={ConversationsScreen} />
+        <Tab.Screen name="Favorites" component={FavoriteScreen} />
+        <Tab.Screen name="Profile" component={ProfileScreen} />
+      </Tab.Navigator>
+    </NavigationContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  // 
 });
