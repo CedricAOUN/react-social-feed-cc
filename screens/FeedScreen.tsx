@@ -1,9 +1,5 @@
 import { StyleSheet, Text, View, Image, FlatList, Dimensions } from "react-native";
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { StatusBar } from "expo-status-bar";
-import { RouteParamList } from "../routes";
-
-type Props = NativeStackScreenProps<RouteParamList, 'Feed'>;
 
 type Post = {
   id: string;
@@ -45,7 +41,7 @@ const { width } = Dimensions.get("window");
 const IMAGE_WIDTH = width * 0.9;
 const IMAGE_HEIGHT = IMAGE_WIDTH * 0.75;
 
-export default function FeedScreen({ navigation }: Props) {
+export default function FeedScreen() {
   const renderItem = ({ item }: { item: Post }) => (
     <View style={styles.postContainer}>
       <Image source={{ uri: item.image }} style={styles.postImage} />

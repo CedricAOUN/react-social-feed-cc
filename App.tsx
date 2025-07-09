@@ -2,10 +2,12 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableOpacity, Modal } from 'react-native';
 import { RouteParamList } from './routes';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import FavoriteScreen from './screens/FavoriteScreen';
 import FeedScreen from './screens/FeedScreen';
 import ConversationsScreen from './screens/ConversationScreen';
 import ProfileScreen from './screens/ProfileScreen';
+import ChatScreen from './screens/ChatScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { Poppins_400Regular, Poppins_700Bold } from '@expo-google-fonts/poppins';
@@ -13,6 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 
 const Tab = createBottomTabNavigator<RouteParamList>();
+const Stack = createNativeStackNavigator<RouteParamList>();
 
 const CustomButton = ({ onPress }: { onPress: () => void }) => (
   <TouchableOpacity style={styles.customButton} onPress={onPress} activeOpacity={0.7}>
@@ -20,17 +23,8 @@ const CustomButton = ({ onPress }: { onPress: () => void }) => (
   </TouchableOpacity>
 );
 
-export default function App() {
+function TabNavigator() {
   const [modalVisible, setModalVisible] = useState(false);
-
-  const [fontsLoaded] = useFonts({
-    Poppins_400Regular,
-    Poppins_700Bold,
-  });
-
-  if (!fontsLoaded) {
-    return null;
-  }
 
   const handleCustomButtonPress = () => {
     setModalVisible(true);
@@ -38,70 +32,67 @@ export default function App() {
 
   return (
     <>
-      <NavigationContainer>
-        <StatusBar style="auto" />
-        <Tab.Navigator
-          screenOptions={{
-            tabBarLabelStyle: {
-              fontFamily: 'Poppins_700Bold',
-              fontSize: 10,
-            },
-            headerTitleStyle: {
-              fontFamily: 'Poppins_700Bold',
-              fontSize: 18,
-            },
-            tabBarStyle: {
-              height: 110,
-            },
+      <Tab.Navigator
+        screenOptions={{
+          tabBarLabelStyle: {
+            fontFamily: 'Poppins_700Bold',
+            fontSize: 10,
+          },
+          headerTitleStyle: {
+            fontFamily: 'Poppins_700Bold',
+            fontSize: 18,
+          },
+          tabBarStyle: {
+            height: 110,
+          },
+        }}
+      >
+        <Tab.Screen
+          name="Feed"
+          component={FeedScreen}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="home" color={color} size={size} />
+            ),
           }}
-        >
-          <Tab.Screen
-            name="Feed"
-            component={FeedScreen}
-            options={{
-              tabBarIcon: ({ color, size }) => (
-                <Ionicons name="home" color={color} size={size} />
-              ),
-            }}
-          />
-          <Tab.Screen
-            name="Conversations"
-            component={ConversationsScreen}
-            options={{
-              tabBarIcon: ({ color, size }) => (
-                <Ionicons name="chatbubble-outline" color={color} size={size} />
-              ),
-            }}
-          />
-          <Tab.Screen
-            name="Add"
-            component={View}
-            options={{
-              tabBarButton: () => (
-                <CustomButton onPress={handleCustomButtonPress} />
-              ),
-            }}
-          />
-          <Tab.Screen
-            name="Favorites"
-            component={FavoriteScreen}
-            options={{
-              tabBarIcon: ({ color, size }) => (
-                <Ionicons name="heart-outline" color={color} size={size} />
-              ),
-            }}
-          />
-          <Tab.Screen
-            name="Profile"
-            component={ProfileScreen}
-            options={{
-              tabBarIcon: ({ color, size }) => (
-                <Ionicons name="person-circle-outline" color={color} size={size} />
-              ),
-            }}
-          />
-        </Tab.Navigator>
-      </NavigationContainer>
+        />
+        <Tab.Screen
+          name="Conversations"
+          component={ConversationsScreen}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="chatbubble-outline" color={color} size={size} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Add"
+          component={View}
+          options={{
+            tabBarButton: () => (
+              <CustomButton onPress={handleCustomButtonPress} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Favorites"
+          component={FavoriteScreen}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="heart-outline" color={color} size={size} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Profile"
+          component={ProfileScreen}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="person-circle-outline" color={color} size={size} />
+            ),
+          }}
+        />
+      </Tab.Navigator>
 
       <Modal
         animationType="fade"
@@ -123,6 +114,31 @@ export default function App() {
         </View>
       </Modal>
     </>
+  );
+}
+
+export default function App() {
+  const [fontsLoaded] = useFonts({
+    Poppins_400Regular,
+    Poppins_700Bold,
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
+  return (
+    <NavigationContainer>
+      <StatusBar style="auto" />
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Tabs" component={TabNavigator} />
+        <Stack.Screen 
+          name="Chat" 
+          component={ChatScreen} 
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
