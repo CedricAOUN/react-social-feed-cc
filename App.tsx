@@ -137,6 +137,8 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     height: 60,
     width: 60,
+    position: 'absolute',
+    top: -30,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -149,8 +151,7 @@ const styles = StyleSheet.create({
   },
   buttonIcon: {
     color: 'white',
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 32,
     transform: [{ rotateZ: '-45deg' }],
   },
   modalOverlay: {
