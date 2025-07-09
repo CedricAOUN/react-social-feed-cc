@@ -103,7 +103,6 @@ export default function App() {
         </Tab.Navigator>
       </NavigationContainer>
 
-      {/* Custom Modal */}
       <Modal
         animationType="fade"
         transparent
