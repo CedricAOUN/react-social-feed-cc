@@ -4,7 +4,7 @@ import { StatusBar } from "expo-status-bar";
 import { RouteParamList } from "../routes";
 import { Ionicons } from "@expo/vector-icons";
 import { Post } from "../types";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Animated, { useSharedValue, withSpring, useAnimatedStyle } from "react-native-reanimated";
 
 const timeSince = (dateString: string): string => {
@@ -41,6 +41,9 @@ export default function ProfileScreen({
 }: Props) {
   const [activeTab, setActiveTab] = useState<"images" | "favorites">("images");
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+  
+  const [stats, setStats] = useState<{ likes: number; conversations: number; follows: number } | null>(null);
+
   const scale = useSharedValue(1);
 
   const currentUserPosts = posts.filter((post) => post.user.name === "John Doe");
@@ -58,19 +61,30 @@ export default function ProfileScreen({
     }
   };
 
-const renderGalleryItem = ({ item }: { item: Post }) => (
-  <TouchableOpacity onPress={() => setSelectedPost(item)} style={styles.postContainer}>
-    <Image source={{ uri: item.image }} style={styles.favoriteImage} />
-    <View style={styles.favoriteUserInfo}>
-      <Image source={{ uri: item.user.avatar }} style={styles.avatar} />
-      <View style={{ marginLeft: 8 }}>
-        <Text style={styles.favoriteUserName}>{item.user.name}</Text>
-        <Text style={styles.favoriteTimeAgo}>{timeSince(item.createdAt)}</Text>
-      </View>
-    </View>
-  </TouchableOpacity>
-);
+  useEffect(() => {
+    if (selectedPost) {
+      setStats({
+        likes: Math.floor(Math.random() * 100),
+        conversations: Math.floor(Math.random() * 100),
+        follows: Math.floor(Math.random() * 100),
+      });
+    } else {
+      setStats(null);
+    }
+  }, [selectedPost]);
 
+  const renderGalleryItem = ({ item }: { item: Post }) => (
+    <TouchableOpacity onPress={() => setSelectedPost(item)} style={styles.postContainer}>
+      <Image source={{ uri: item.image }} style={styles.favoriteImage} />
+      <View style={styles.favoriteUserInfo}>
+        <Image source={{ uri: item.user.avatar }} style={styles.avatar} />
+        <View style={{ marginLeft: 8 }}>
+          <Text style={styles.favoriteUserName}>{item.user.name}</Text>
+          <Text style={styles.favoriteTimeAgo}>{timeSince(item.createdAt)}</Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
 
   const renderFavoriteItem = ({ item }: { item: Post }) => (
     <TouchableOpacity onPress={() => setSelectedPost(item)} style={styles.postContainer}>
@@ -191,19 +205,19 @@ const renderGalleryItem = ({ item }: { item: Post }) => (
                     <View style={styles.statColumn}>
                       <Text style={styles.statLabel}>Likes</Text>
                       <Text style={styles.statValue}>
-                        {Math.floor(Math.random() * 100)}
+                        {stats ? stats.likes : "..."}
                       </Text>
                     </View>
                     <View style={styles.statColumn}>
                       <Text style={styles.statLabel}>Conversations</Text>
                       <Text style={styles.statValue}>
-                        {Math.floor(Math.random() * 100)}
+                        {stats ? stats.conversations : "..."}
                       </Text>
                     </View>
                     <View style={styles.statColumn}>
                       <Text style={styles.statLabel}>Follows</Text>
                       <Text style={styles.statValue}>
-                        {Math.floor(Math.random() * 100)}
+                        {stats ? stats.follows : "..."}
                       </Text>
                     </View>
                   </View>

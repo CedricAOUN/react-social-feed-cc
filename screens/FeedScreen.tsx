@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import Animated, {
   useSharedValue,
@@ -38,7 +38,6 @@ const timeSince = (dateString: string): string => {
   }
 };
 
-
 type Props = {
   posts: Post[];
   favorites: Post[];
@@ -49,8 +48,30 @@ const { width } = Dimensions.get("window");
 const IMAGE_WIDTH = width * 0.9;
 const IMAGE_HEIGHT = IMAGE_WIDTH * 0.75;
 
-export default function FeedScreen({ posts, favorites, toggleFavorite }: Props) {
+export default function FeedScreen({
+  posts,
+  favorites,
+  toggleFavorite,
+}: Props) {
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+  const [stats, setStats] = useState<{
+    likes: number;
+    conversations: number;
+    follows: number;
+  } | null>(null);
+
+  useEffect(() => {
+    if (selectedPost) {
+      setStats({
+        likes: Math.floor(Math.random() * 100),
+        conversations: Math.floor(Math.random() * 100),
+        follows: Math.floor(Math.random() * 100),
+      });
+    } else {
+      setStats(null);
+    }
+  }, [selectedPost]);
+
   const scale = useSharedValue(1);
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -72,13 +93,13 @@ export default function FeedScreen({ posts, favorites, toggleFavorite }: Props) 
         <Image source={{ uri: item.image }} style={styles.postImage} />
       </TouchableOpacity>
 
-<View style={styles.userInfo}>
-  <Image source={{ uri: item.user.avatar }} style={styles.avatar} />
-  <View style={{ marginLeft: 8 }}>
-    <Text style={styles.userName}>{item.user.name}</Text>
-    <Text style={styles.timeAgo}>{timeSince(item.createdAt)}</Text>
-  </View>
-</View>
+      <View style={styles.userInfo}>
+        <Image source={{ uri: item.user.avatar }} style={styles.avatar} />
+        <View style={{ marginLeft: 8 }}>
+          <Text style={styles.userName}>{item.user.name}</Text>
+          <Text style={styles.timeAgo}>{timeSince(item.createdAt)}</Text>
+        </View>
+      </View>
     </View>
   );
 
@@ -110,19 +131,19 @@ export default function FeedScreen({ posts, favorites, toggleFavorite }: Props) 
                     <View style={styles.statColumn}>
                       <Text style={styles.statLabel}>Likes</Text>
                       <Text style={styles.statValue}>
-                        {Math.floor(Math.random() * 100)}
+                        {stats ? stats.likes : "..."}
                       </Text>
                     </View>
                     <View style={styles.statColumn}>
                       <Text style={styles.statLabel}>Conversations</Text>
                       <Text style={styles.statValue}>
-                        {Math.floor(Math.random() * 100)}
+                        {stats ? stats.conversations : "..."}
                       </Text>
                     </View>
                     <View style={styles.statColumn}>
                       <Text style={styles.statLabel}>Follows</Text>
                       <Text style={styles.statValue}>
-                        {Math.floor(Math.random() * 100)}
+                        {stats ? stats.follows : "..."}
                       </Text>
                     </View>
                   </View>
@@ -260,11 +281,11 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   timeAgo: {
-  fontFamily: "Poppins_400Regular",
-  fontSize: 12,
-  color: "#eee",
-  fontWeight: "bold",
-  marginLeft: 8,
-  marginTop: -4,
-},
+    fontFamily: "Poppins_400Regular",
+    fontSize: 12,
+    color: "#eee",
+    fontWeight: "bold",
+    marginLeft: 8,
+    marginTop: -4,
+  },
 });

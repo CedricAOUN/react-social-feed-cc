@@ -8,7 +8,7 @@ import {
   Modal,
   Dimensions,
 } from "react-native";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import Animated, {
   useSharedValue,
@@ -30,15 +30,10 @@ const timeSince = (dateString: string): string => {
   const hours = Math.floor(diffMs / (1000 * 60 * 60));
   const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
-  if (days >= 1) {
-    return `${days} day${days > 1 ? "s" : ""} ago`;
-  } else if (hours >= 1) {
-    return `${hours} hour${hours > 1 ? "s" : ""} ago`;
-  } else if (minutes >= 1) {
-    return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
-  } else {
-    return "just now";
-  }
+  if (days >= 1) return `${days} day${days > 1 ? "s" : ""} ago`;
+  if (hours >= 1) return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+  if (minutes >= 1) return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
+  return "just now";
 };
 
 type Props = {
@@ -48,6 +43,24 @@ type Props = {
 
 export default function FavoritesScreen({ favorites, toggleFavorite }: Props) {
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+  const [stats, setStats] = useState<{
+    likes: number;
+    conversations: number;
+    follows: number;
+  } | null>(null);
+
+  useEffect(() => {
+    if (selectedPost) {
+      setStats({
+        likes: Math.floor(Math.random() * 100),
+        conversations: Math.floor(Math.random() * 100),
+        follows: Math.floor(Math.random() * 100),
+      });
+    } else {
+      setStats(null);
+    }
+  }, [selectedPost]);
+
   const scale = useSharedValue(1);
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -106,19 +119,19 @@ export default function FavoritesScreen({ favorites, toggleFavorite }: Props) {
                     <View style={styles.statColumn}>
                       <Text style={styles.statLabel}>Likes</Text>
                       <Text style={styles.statValue}>
-                        {Math.floor(Math.random() * 100)}
+                        {stats ? stats.likes : "..."}
                       </Text>
                     </View>
                     <View style={styles.statColumn}>
                       <Text style={styles.statLabel}>Conversations</Text>
                       <Text style={styles.statValue}>
-                        {Math.floor(Math.random() * 100)}
+                        {stats ? stats.conversations : "..."}
                       </Text>
                     </View>
                     <View style={styles.statColumn}>
                       <Text style={styles.statLabel}>Follows</Text>
                       <Text style={styles.statValue}>
-                        {Math.floor(Math.random() * 100)}
+                        {stats ? stats.follows : "..."}
                       </Text>
                     </View>
                   </View>
@@ -130,7 +143,7 @@ export default function FavoritesScreen({ favorites, toggleFavorite }: Props) {
                     <Animated.View style={animatedStyle}>
                       <Ionicons
                         name={
-                          favorites.some((p) => p.id === selectedPost?.id)
+                          favorites.some((p) => p.id === selectedPost.id)
                             ? "heart"
                             : "heart-outline"
                         }
