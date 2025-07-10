@@ -7,5 +7,6 @@ export type RouteParamList = {
   Add: undefined;
   Favorites: undefined;
   Profile: undefined;
+  AddPost: undefined;
   Chat: { conversation: Conversation };
 };
