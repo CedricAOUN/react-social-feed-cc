@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
   userInfo: {
     position: "absolute",
     top: 10,
-    left: 20,
+    left: 30,
     flexDirection: "row",
     alignItems: "center",
   },
