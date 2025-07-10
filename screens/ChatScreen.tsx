@@ -1,20 +1,34 @@
-import { StyleSheet, Text, View, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native";
+import { StyleSheet, Text, View, ScrollView, TextInput, TouchableOpacity, Platform, Keyboard } from "react-native";
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { StatusBar } from "expo-status-bar";
 import { RouteParamList } from "../routes";
 import { Ionicons } from "@expo/vector-icons";
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useEffect, useState } from 'react';
 
 type Props = NativeStackScreenProps<RouteParamList, 'Chat'>;
 
 export default function ChatScreen({ navigation, route }: Props) {
   const { conversation } = route.params;
+  const insets = useSafeAreaInsets();
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (e) => {
+      setKeyboardHeight(e.endCoordinates.height + 10);
+    });
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardHeight(0);
+    });
+
+    return () => {
+      keyboardDidShowListener?.remove();
+      keyboardDidHideListener?.remove();
+    };
+  }, []);
 
   return (
-    <KeyboardAvoidingView 
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
-    >
+    <View style={[styles.container, { paddingTop: insets.top }]}>
       <StatusBar style="auto" />
       
       {/* Header */}
@@ -42,7 +56,13 @@ export default function ChatScreen({ navigation, route }: Props) {
       </ScrollView>
 
       {/* Input */}
-      <View style={styles.inputContainer}>
+      <View style={[
+        styles.inputContainer,
+        { 
+          paddingBottom: Math.max(insets.bottom, 10), // Some padding for android buttons
+          marginBottom: keyboardHeight,
+        }
+      ]}>
         <TextInput 
           style={styles.textInput}
           placeholder="Type a message..."
@@ -52,7 +72,7 @@ export default function ChatScreen({ navigation, route }: Props) {
           <Ionicons name="send" size={20} color="white" />
         </TouchableOpacity>
       </View>
-    </KeyboardAvoidingView>
+    </View>
   );
 }
 
@@ -66,7 +86,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: 20,
-    paddingTop: 60,
     backgroundColor: '#e1f8fc',
   },
   headerTitle: {
@@ -100,7 +119,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
-    paddingBottom: 60,
     backgroundColor: '#e1f8fc',
   },
   textInput: {
