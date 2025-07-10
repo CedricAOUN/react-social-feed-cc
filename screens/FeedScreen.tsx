@@ -73,7 +73,7 @@ export default function FeedScreen({ favorites, toggleFavorite }: Props) {
   const handleLike = () => {
     if (selectedPost) {
       toggleFavorite(selectedPost);
-      scale.value = withSpring(1.8, { damping: 3 }, () => {
+      scale.value = withSpring(1.3, { damping: 3 }, () => {
         scale.value = withSpring(1, { damping: 5 });
       });
     }
