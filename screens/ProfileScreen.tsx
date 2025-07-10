@@ -1,14 +1,27 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
 import { RouteParamList } from "../routes";
 import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
+import { Post } from "../types";
+import React, { useState } from "react";
 
-type Props = NativeStackScreenProps<RouteParamList, "Profile">;
+type Props = NativeStackScreenProps<RouteParamList, "Profile"> & {
+  favorites: Post[];
+};
 
-export default function ProfileScreen({ navigation }: Props) {
-  const [activeTab, setActiveTab] = useState<'images' | 'favorites'>('images');
+export default function ProfileScreen({ navigation, favorites }: Props) {
+  const [activeTab, setActiveTab] = useState<"images" | "favorites">("images");
+
+  const renderFavoriteItem = ({ item }: { item: Post }) => (
+    <View style={styles.postContainer}>
+      <Image source={{ uri: item.image }} style={styles.postImage} />
+      <View style={styles.userInfo}>
+        <Image source={{ uri: item.user.avatar }} style={styles.avatar} />
+        <Text style={styles.userName}>{item.user.name}</Text>
+      </View>
+    </View>
+  );
 
   return (
     <View style={styles.container}>
@@ -40,26 +53,35 @@ export default function ProfileScreen({ navigation }: Props) {
       </View>
 
       <View style={styles.toggleTabs}>
-        <TouchableOpacity onPress={() => setActiveTab('images')}>
+        <TouchableOpacity onPress={() => setActiveTab("images")}>
           <Ionicons
             name="images-outline"
             size={28}
-            color={activeTab === 'images' ? '#000' : '#888'}
+            color={activeTab === "images" ? "#000" : "#888"}
           />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => setActiveTab('favorites')}>
+        <TouchableOpacity onPress={() => setActiveTab("favorites")}>
           <Ionicons
             name="heart-outline"
             size={28}
-            color={activeTab === 'favorites' ? '#000' : '#888'}
+            color={activeTab === "favorites" ? "#000" : "#888"}
           />
         </TouchableOpacity>
       </View>
 
       <View style={styles.contentPreview}>
-        <Text style={styles.previewText}>
-          {activeTab === 'images' ? 'Galerie d’images' : 'Favoris'}
-        </Text>
+        {activeTab === "images" ? (
+          <Text style={styles.previewText}>Galerie d’images</Text>
+        ) : favorites.length === 0 ? (
+          <Text style={styles.previewText}>Aucun favori pour l’instant</Text>
+        ) : (
+          <FlatList
+            data={favorites}
+            keyExtractor={(item) => item.id}
+            renderItem={renderFavoriteItem}
+            showsVerticalScrollIndicator={false}
+          />
+        )}
       </View>
     </View>
   );
@@ -69,8 +91,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    alignItems: "center",
     paddingTop: 60,
+    alignItems: "center",
   },
   avatarWrapper: {
     justifyContent: "center",
@@ -86,7 +108,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     transform: [{ rotateZ: "45deg" }],
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   avatarImage: {
     height: 60,
@@ -128,7 +150,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   contentPreview: {
-    padding: 20,
+    width: "90%",
+    height: 300,
     borderWidth: 1,
     borderColor: "#ddd",
     borderRadius: 10,
@@ -137,5 +160,33 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins_400Regular",
     fontSize: 14,
     color: "#555",
+    textAlign: "center",
+    marginTop: 140,
+  },
+  postContainer: {
+    marginBottom: 20,
+    alignItems: "center",
+  },
+  postImage: {
+    width: 300,
+    height: 225,
+    borderRadius: 15,
+  },
+  userInfo: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 5,
+  },
+  avatar: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    borderWidth: 2,
+    borderColor: "#fff",
+  },
+  userName: {
+    color: "#000",
+    fontFamily: "Poppins_700Bold",
+    marginLeft: 8,
   },
 });

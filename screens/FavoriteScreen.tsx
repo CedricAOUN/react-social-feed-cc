@@ -1,14 +1,24 @@
-import { StyleSheet, Text, View } from "react-native";
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { StyleSheet, Text, View, FlatList, Image } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { RouteParamList } from "../routes";
+import { Post } from "./FeedScreen";
 
-type Props = NativeStackScreenProps<RouteParamList, 'Favorites'>;
+type Props = {
+  favorites: Post[];
+};
 
-export default function FavoriteScreen({ navigation }: Props) {
+export default function FavoriteScreen({ favorites }: Props) {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Favorites Screen</Text>
+      <Text style={styles.title}>Favorites</Text>
+      <FlatList
+        data={favorites}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <Image source={{ uri: item.image }} style={styles.favoriteImage} />
+        )}
+        contentContainerStyle={{ paddingTop: 20 }}
+        showsVerticalScrollIndicator={false}
+      />
       <StatusBar style="auto" />
     </View>
   );
@@ -17,12 +27,18 @@ export default function FavoriteScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
   },
-    title: {
-    fontFamily: 'Poppins_700Bold',
+  title: {
+    fontFamily: "Poppins_700Bold",
     fontSize: 18,
+    marginTop: 20,
+  },
+  favoriteImage: {
+    width: 300,
+    height: 200,
+    borderRadius: 15,
+    marginVertical: 10,
   },
 });
