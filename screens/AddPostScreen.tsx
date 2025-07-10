@@ -5,11 +5,35 @@ import { RouteParamList } from "../routes";
 import * as ImagePicker from 'expo-image-picker';
 import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
+import { Post } from "../types";
 
 type Props = NativeStackScreenProps<RouteParamList, 'AddPost'>;
 
-export default function AddPostScreen({ navigation }: Props) {
+export default function AddPostScreen({ navigation, route }: Props) {
+  const { onAddPost } = route.params;
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [postTitle, setPostTitle] = useState('');
+
+  const handleAddPost = () => {
+    if (!postTitle.trim() || !selectedImage) {
+      const missingField = !postTitle.trim() ? "Post Title" : "Image";
+      Alert.alert("Missing Field", `${missingField} is required!`);
+      return;
+    }
+
+    const post: Post = {
+      id: Math.random().toString(36).substring(7), // Generate a random ID
+      title: postTitle,
+      image: selectedImage || '',
+      user: { // Our mock current user
+        name: 'John Doe',
+        avatar: 'https://randomuser.me/api/portraits/men/54.jpg',
+      },
+    };
+
+    onAddPost(post);
+    navigation.goBack();
+  };
 
   const pickImage = async () => {
     // Request permission
@@ -56,10 +80,13 @@ export default function AddPostScreen({ navigation }: Props) {
 
       <Text style={styles.title}>What's on your mind?</Text>
       <TextInput 
-        placeholder="Post title..." 
+        placeholder="Post title..."
+        value={postTitle}
+        onChangeText={setPostTitle}
         style={styles.postTitleInput} 
+        maxLength={50}
       />
-      <TouchableOpacity style={styles.addButton} onPress={() => {}} >
+      <TouchableOpacity style={styles.addButton} onPress={handleAddPost} >
         <Text style={styles.addButtonText}>Add</Text>
       </TouchableOpacity>
       <StatusBar style="auto" />

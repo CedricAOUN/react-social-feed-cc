@@ -9,10 +9,11 @@ import AddPostScreen from "../screens/AddPostScreen";
 import CustomButton from "./CustomButton";
 import FavoriteScreen from "../screens/FavoriteScreen";
 import ProfileScreen from "../screens/ProfileScreen";
+import { NativeStackScreenProps } from "react-native-screens/lib/typescript/native-stack/types";
 
 const Tab = createBottomTabNavigator<RouteParamList>();
 
-function TabNavigator() {
+function TabNavigator({ posts }: { posts: Post[] }) {
   const [favorites, setFavorites] = useState<Post[]>([]);
 
   const toggleFavorite = (post: Post) => {
@@ -42,7 +43,7 @@ function TabNavigator() {
         <Tab.Screen
           name="Feed"
           children={() => (
-            <FeedScreen favorites={favorites} toggleFavorite={toggleFavorite} />
+            <FeedScreen posts={posts} favorites={favorites} toggleFavorite={toggleFavorite} />
           )}
           options={{
             tabBarIcon: ({ color, size }) => (

@@ -16,53 +16,19 @@ import Animated, {
   withSpring,
   useAnimatedStyle,
 } from "react-native-reanimated";
-
-export type Post = {
-  id: string;
-  user: {
-    name: string;
-    avatar: string;
-  };
-  image: string;
-};
+import { Post } from "../types";
 
 type Props = {
+  posts: Post[];
   favorites: Post[];
   toggleFavorite: (post: Post) => void;
 };
-
-const DATA: Post[] = [
-  {
-    id: "1",
-    user: {
-      name: "Alice Dupont",
-      avatar: "https://randomuser.me/api/portraits/women/44.jpg",
-    },
-    image: "https://picsum.photos/id/1011/400/300",
-  },
-  {
-    id: "2",
-    user: {
-      name: "Bob Martin",
-      avatar: "https://randomuser.me/api/portraits/men/36.jpg",
-    },
-    image: "https://picsum.photos/id/1015/400/300",
-  },
-  {
-    id: "3",
-    user: {
-      name: "Clara Morel",
-      avatar: "https://randomuser.me/api/portraits/women/65.jpg",
-    },
-    image: "https://picsum.photos/id/1016/400/300",
-  },
-];
 
 const { width } = Dimensions.get("window");
 const IMAGE_WIDTH = width * 0.9;
 const IMAGE_HEIGHT = IMAGE_WIDTH * 0.75;
 
-export default function FeedScreen({ favorites, toggleFavorite }: Props) {
+export default function FeedScreen({ posts, favorites, toggleFavorite }: Props) {
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
   const scale = useSharedValue(1);
 
@@ -95,7 +61,7 @@ export default function FeedScreen({ favorites, toggleFavorite }: Props) {
   return (
     <View style={styles.container}>
       <FlatList
-        data={DATA}
+        data={posts}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
         contentContainerStyle={{ paddingVertical: 20 }}
@@ -112,6 +78,9 @@ export default function FeedScreen({ favorites, toggleFavorite }: Props) {
                   source={{ uri: selectedPost.image }}
                   style={styles.modalImage}
                 />
+                {selectedPost.title && (
+                  <Text style={styles.modalTitle}>{selectedPost.title}</Text>
+                )}
                 <View style={styles.modalInfo}>
                   <View style={styles.statsRow}>
                     <View style={styles.statColumn}>
@@ -199,6 +168,10 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontFamily: "Poppins_700Bold",
     marginLeft: 8,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontFamily: "Poppins_700Bold",
   },
   modalOverlay: {
     flex: 1,

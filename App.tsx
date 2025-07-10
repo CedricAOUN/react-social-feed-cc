@@ -1,5 +1,4 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet } from "react-native";
 import { RouteParamList } from "./routes";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ChatScreen from "./screens/ChatScreen";
@@ -11,11 +10,15 @@ import {
 } from "@expo-google-fonts/poppins";
 import AddPostScreen from "./screens/AddPostScreen";
 import TabNavigator from "./components/TabNavigator";
+import { useState } from "react";
+import POSTS from "./mockDb/posts";
+import { Post } from "./types";
 
 const Stack = createNativeStackNavigator<RouteParamList>();
 
 
 function App() {
+  const [posts, setPosts] = useState(POSTS); // Initialize posts state
   const [fontsLoaded] = useFonts({
     Poppins_400Regular,
     Poppins_700Bold,
@@ -23,18 +26,28 @@ function App() {
   if (!fontsLoaded) {
     return null; // or a loading indicator
   }
+
+  const handleAddPost = (post: Post) => {
+    setPosts((prevPosts) => [post, ...prevPosts]);
+  };
+
   return (
     <NavigationContainer>
       <StatusBar style="auto" />
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen
           name="Tabs"
-          component={TabNavigator}
+          children={() => (
+            <TabNavigator
+              posts={posts}
+            />
+          )}
         />
         <Stack.Screen
           name="AddPost"
           component={AddPostScreen}
-          options={{ 
+          initialParams={{ onAddPost: handleAddPost }} // Default params
+          options={{
             headerShown: true,
             title: "Add Post",
             headerTitleStyle: {
