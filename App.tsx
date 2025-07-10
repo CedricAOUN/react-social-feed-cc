@@ -16,13 +16,15 @@ import { Post } from "./types";
 
 const Stack = createNativeStackNavigator<RouteParamList>();
 
-
 function App() {
   const [posts, setPosts] = useState(POSTS); // Initialize posts state
+  const [favorites, setFavorites] = useState<Post[]>([]); // <-- Ajouté favorites state ici
+
   const [fontsLoaded] = useFonts({
     Poppins_400Regular,
     Poppins_700Bold,
   });
+
   if (!fontsLoaded) {
     return null; // or a loading indicator
   }
@@ -31,17 +33,26 @@ function App() {
     setPosts((prevPosts) => [post, ...prevPosts]);
   };
 
+  // toggleFavorite qui ajoute ou enlève un post des favoris
+  const toggleFavorite = (post: Post) => {
+    setFavorites((prevFavorites) => {
+      if (prevFavorites.some((p) => p.id === post.id)) {
+        // Retirer des favoris
+        return prevFavorites.filter((p) => p.id !== post.id);
+      } else {
+        // Ajouter aux favoris
+        return [...prevFavorites, post];
+      }
+    });
+  };
+
   return (
     <NavigationContainer>
       <StatusBar style="auto" />
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen
           name="Tabs"
-          children={() => (
-            <TabNavigator
-              posts={posts}
-            />
-          )}
+          children={() => <TabNavigator posts={posts} />}
         />
         <Stack.Screen
           name="AddPost"
@@ -51,17 +62,15 @@ function App() {
             headerShown: true,
             title: "Add Post",
             headerTitleStyle: {
-              fontFamily: 'Poppins_700Bold',
+              fontFamily: "Poppins_700Bold",
               fontSize: 18,
-            }
+            },
           }}
         />
-        <Stack.Screen
-          name="Chat"
-          component={ChatScreen}
-        />
+        <Stack.Screen name="Chat" component={ChatScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
+
 export default App;

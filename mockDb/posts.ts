@@ -8,6 +8,7 @@ const POSTS: Post[] = [
       avatar: 'https://randomuser.me/api/portraits/women/44.jpg',
     },
     image: 'https://picsum.photos/id/1011/400/300',
+    createdAt: new Date().toISOString(),
   },
   {
     id: '2',
@@ -16,6 +17,7 @@ const POSTS: Post[] = [
       avatar: 'https://randomuser.me/api/portraits/men/36.jpg',
     },
     image: 'https://picsum.photos/id/1015/400/300',
+    createdAt: new Date().toISOString(),
   },
   {
     id: '3',
@@ -24,6 +26,7 @@ const POSTS: Post[] = [
       avatar: 'https://randomuser.me/api/portraits/women/65.jpg',
     },
     image: 'https://picsum.photos/id/1016/400/300',
+    createdAt: new Date().toISOString(),
   },
 ];
 

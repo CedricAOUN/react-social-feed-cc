@@ -25,80 +25,85 @@ function TabNavigator({ posts }: { posts: Post[] }) {
   };
 
   return (
-      <Tab.Navigator
-        screenOptions={{
-          tabBarLabelStyle: {
-            fontFamily: "Poppins_700Bold",
-            fontSize: 10,
-          },
-          headerTitleStyle: {
-            fontFamily: "Poppins_700Bold",
-            fontSize: 18,
-          },
-          tabBarStyle: {
-            height: 110,
-          },
+    <Tab.Navigator
+      screenOptions={{
+        tabBarLabelStyle: {
+          fontFamily: "Poppins_700Bold",
+          fontSize: 10,
+        },
+        headerTitleStyle: {
+          fontFamily: "Poppins_700Bold",
+          fontSize: 18,
+        },
+        tabBarStyle: {
+          height: 110,
+        },
+      }}
+    >
+      <Tab.Screen
+        name="Feed"
+        children={() => (
+          <FeedScreen
+            posts={posts}
+            favorites={favorites}
+            toggleFavorite={toggleFavorite}
+          />
+        )}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="home" color={color} size={size} />
+          ),
         }}
-      >
-        <Tab.Screen
-          name="Feed"
-          children={() => (
-            <FeedScreen posts={posts} favorites={favorites} toggleFavorite={toggleFavorite} />
-          )}
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="home" color={color} size={size} />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Conversations"
-          component={ConversationsScreen}
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="chatbubble-outline" color={color} size={size} />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="AddPost"
-          component={AddPostScreen}
-          options={{
-            tabBarButton: () => (
-              <CustomButton navPath="AddPost" />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Favorites"
-          children={() => <FavoriteScreen favorites={favorites} />}
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="heart-outline" color={color} size={size} />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Profile"
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons
-                name="person-circle-outline"
-                color={color}
-                size={size}
-              />
-            ),
-          }}
-          children={({ navigation, route }) => (
-            <ProfileScreen
-              navigation={navigation}
-              route={route}
-              favorites={favorites}
-              posts={posts}
-            />
-          )}
-        />
-      </Tab.Navigator>
-    );
+      />
+      <Tab.Screen
+        name="Conversations"
+        component={ConversationsScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="chatbubble-outline" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="AddPost"
+        component={AddPostScreen}
+        options={{
+          tabBarButton: () => <CustomButton navPath="AddPost" />,
+        }}
+      />
+      <Tab.Screen
+        name="Favorites"
+        children={() => (
+          <FavoriteScreen
+            favorites={favorites}
+            toggleFavorite={toggleFavorite}
+          />
+        )}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="heart-outline" color={color} size={size} />
+          ),
+        }}
+      />
+
+      <Tab.Screen
+        name="Profile"
+        children={({ navigation, route }) => (
+          <ProfileScreen
+            navigation={navigation}
+            route={route}
+            favorites={favorites}
+            posts={posts}
+            toggleFavorite={toggleFavorite}
+          />
+        )}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="person-circle-outline" color={color} size={size} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
 }
 export default TabNavigator;

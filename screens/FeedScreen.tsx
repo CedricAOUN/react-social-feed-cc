@@ -18,6 +18,27 @@ import Animated, {
 } from "react-native-reanimated";
 import { Post } from "../types";
 
+const timeSince = (dateString: string): string => {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+
+  const minutes = Math.floor(diffMs / (1000 * 60));
+  const hours = Math.floor(diffMs / (1000 * 60 * 60));
+  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+  if (days >= 1) {
+    return `${days} day${days > 1 ? "s" : ""} ago`;
+  } else if (hours >= 1) {
+    return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+  } else if (minutes >= 1) {
+    return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
+  } else {
+    return "just now";
+  }
+};
+
+
 type Props = {
   posts: Post[];
   favorites: Post[];
@@ -51,10 +72,13 @@ export default function FeedScreen({ posts, favorites, toggleFavorite }: Props) 
         <Image source={{ uri: item.image }} style={styles.postImage} />
       </TouchableOpacity>
 
-      <View style={styles.userInfo}>
-        <Image source={{ uri: item.user.avatar }} style={styles.avatar} />
-        <Text style={styles.userName}>{item.user.name}</Text>
-      </View>
+<View style={styles.userInfo}>
+  <Image source={{ uri: item.user.avatar }} style={styles.avatar} />
+  <View style={{ marginLeft: 8 }}>
+    <Text style={styles.userName}>{item.user.name}</Text>
+    <Text style={styles.timeAgo}>{timeSince(item.createdAt)}</Text>
+  </View>
+</View>
     </View>
   );
 
@@ -235,4 +259,12 @@ const styles = StyleSheet.create({
     maxWidth: 120,
     flexGrow: 1,
   },
+  timeAgo: {
+  fontFamily: "Poppins_400Regular",
+  fontSize: 12,
+  color: "#eee",
+  fontWeight: "bold",
+  marginLeft: 8,
+  marginTop: -4,
+},
 });

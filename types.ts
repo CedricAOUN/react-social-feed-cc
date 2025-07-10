@@ -6,4 +6,5 @@ export type Post = {
     avatar: string;
   };
   image: string;
+  createdAt: string; 
 };

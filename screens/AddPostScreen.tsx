@@ -25,6 +25,7 @@ export default function AddPostScreen({ navigation, route }: Props) {
       id: Math.random().toString(36).substring(7), // Generate a random ID
       title: postTitle,
       image: selectedImage || '',
+      createdAt: new Date().toISOString(),
       user: { // Our mock current user
         name: 'John Doe',
         avatar: 'https://randomuser.me/api/portraits/men/54.jpg',
