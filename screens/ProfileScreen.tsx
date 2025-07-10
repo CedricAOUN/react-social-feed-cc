@@ -23,10 +23,10 @@ export default function ProfileScreen({ navigation, favorites }: Props) {
     </View>
   );
 
-  return (
-    <View style={styles.container}>
+  const renderHeader = () => (
+    <View style={styles.headerContainer}>
       <StatusBar style="auto" />
-
+      
       <View style={styles.avatarWrapper}>
         <Image
           source={{ uri: "https://randomuser.me/api/portraits/men/54.jpg" }}
@@ -68,21 +68,38 @@ export default function ProfileScreen({ navigation, favorites }: Props) {
           />
         </TouchableOpacity>
       </View>
+    </View>
+  );
 
-      <View style={styles.contentPreview}>
-        {activeTab === "images" ? (
-          <Text style={styles.previewText}>Galerie d’images</Text>
-        ) : favorites.length === 0 ? (
-          <Text style={styles.previewText}>Aucun favori pour l’instant</Text>
-        ) : (
-          <FlatList
-            data={favorites}
-            keyExtractor={(item) => item.id}
-            renderItem={renderFavoriteItem}
-            showsVerticalScrollIndicator={false}
-          />
-        )}
-      </View>
+  const renderEmptyContent = () => (
+    <View style={styles.contentPreview}>
+      <Text style={styles.previewText}>
+        {activeTab === "images" ? "Galerie d'images" : "Aucun favori pour l'instant"}
+      </Text>
+    </View>
+  );
+
+  return (
+    <View style={styles.container}>
+      {activeTab === "images" || favorites.length === 0 ? (
+        <FlatList
+          data={[]}
+          renderItem={null}
+          ListHeaderComponent={renderHeader}
+          ListFooterComponent={renderEmptyContent}
+          contentContainerStyle={styles.contentContainer}
+          showsVerticalScrollIndicator={false}
+        />
+      ) : (
+        <FlatList
+          data={favorites}
+          keyExtractor={(item) => item.id}
+          renderItem={renderFavoriteItem}
+          ListHeaderComponent={renderHeader}
+          contentContainerStyle={styles.contentContainer}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
     </View>
   );
 }
@@ -92,6 +109,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     paddingTop: 60,
+    height: "100%",
+  },
+  headerContainer: {
+    alignItems: "center",
+    paddingHorizontal: 20,
+  },
+  contentContainer: {
     alignItems: "center",
   },
   avatarWrapper: {
