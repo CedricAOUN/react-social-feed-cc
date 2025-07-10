@@ -3,21 +3,35 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { StatusBar } from "expo-status-bar";
 import { RouteParamList } from "../routes";
 import { Ionicons } from "@expo/vector-icons";
-import conversations from "../mockDb/conversations";
+import { Conversation, CONVERSATION_DATA } from "../mockDb/conversations";
 import { useState } from "react";
 
 type Props = NativeStackScreenProps<RouteParamList, 'Conversations'>;
 
 export default function ConversationsScreen({ navigation }: Props) {
   const [searchQuery, setSearchQuery] = useState('');
+  const [conversations, setConversations] = useState<Conversation[]>(CONVERSATION_DATA);
+
+  const handleOpenChat = (conversation: Conversation) => {
+    handleMessagesRead(conversation.id);
+    navigation.navigate('Chat', { conversation });
+  };
+
+  const handleMessagesRead = (conversationId: string) => {
+    setConversations(prevConversations => 
+      prevConversations.map(conversation => 
+        conversation.id === conversationId ? { ...conversation, read: true } : conversation
+      )
+    );
+  }
 
   const filteredConversations = conversations.filter(conversation => 
     conversation.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const renderConversationItem = ({ item, index }: { item: any, index: number }) => (
+  const renderConversationItem = ({ item, index }: { item: Conversation, index: number }) => (
     <TouchableHighlight 
-      onPress={() => navigation.navigate('Chat', { conversation: item })}
+      onPress={() => handleOpenChat(item)}
       underlayColor="transparent"
     >
       <View key={index} style={styles.chatButton}>
@@ -27,8 +41,9 @@ export default function ConversationsScreen({ navigation }: Props) {
         />
         <View>
           <Text style={{ fontFamily: 'Poppins_500Medium', fontSize: 16, fontWeight: 700 }}>{item.name}</Text>
-          <Text style={{ fontFamily: 'Poppins_400Regular', fontSize: 12 }}>{item.messages[0].msg}</Text>
+          <Text style={{ fontFamily: 'Poppins_400Regular', fontSize: 12 }}>{item.messages[item.messages.length - 1].msg}</Text>
         </View>
+        {item.read === false && <Text style={styles.unreadText}>Unread Messages</Text>}
       </View>
     </TouchableHighlight>
   );
@@ -89,5 +104,16 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     borderColor: '#000',
     borderWidth: 1,
-  }
+  },
+  unreadText: {
+    fontFamily: 'Poppins_400Regular',
+    fontSize: 12,
+    color: 'white',
+    backgroundColor: '#3264a8',
+    borderRadius: 5,
+    position: 'absolute',
+    paddingHorizontal: 10,
+    top: -5,
+    right: 5,
+  },
 });

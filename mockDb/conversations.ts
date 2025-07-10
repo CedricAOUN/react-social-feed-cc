@@ -2,14 +2,16 @@ export type Conversation = {
   id: string;
   name: string;
   image: string;
+  read?: boolean;
   messages: Array<{ msg: string; sent: boolean }>;
 };
 
-const conversations: Conversation[] = [
+export const CONVERSATION_DATA: Conversation[] = [
   {
     id: '1',
     name: 'John Doe',
     image: 'https://randomuser.me/api/portraits/men/1.jpg',
+    read: false,
     messages: [
       { msg: 'Hey, how are you?', sent: true },
       { msg: 'I am good, thanks! How about you?', sent: false },
@@ -19,6 +21,7 @@ const conversations: Conversation[] = [
     id: '2',
     name: 'Jane Smith',
     image: 'https://randomuser.me/api/portraits/women/44.jpg',
+    read: false,
     messages: [
       { msg: 'Let’s catch up soon!', sent: true },
       { msg: 'Absolutely! What time works for you?', sent: false },
@@ -28,6 +31,7 @@ const conversations: Conversation[] = [
     id: '3',
     name: 'Alice Johnson',
     image: 'https://randomuser.me/api/portraits/women/65.jpg',
+    read: false,
     messages: [
       { msg: 'Did you finish the report?', sent: true },
       { msg: 'Not yet, I will do it by EOD.', sent: false },
@@ -37,6 +41,7 @@ const conversations: Conversation[] = [
     id: '4',
     name: 'Mike Chen',
     image: 'https://randomuser.me/api/portraits/men/32.jpg',
+    read: true,
     messages: [
       { msg: 'The meeting has been moved to 3 PM', sent: false },
       { msg: 'Thanks for letting me know!', sent: true },
@@ -47,6 +52,7 @@ const conversations: Conversation[] = [
     id: '5',
     name: 'Sarah Williams',
     image: 'https://randomuser.me/api/portraits/women/12.jpg',
+    read: true,
     messages: [
       { msg: 'Happy birthday! 🎉', sent: true },
       { msg: 'Thank you so much! ❤️', sent: false },
@@ -58,6 +64,7 @@ const conversations: Conversation[] = [
     id: '6',
     name: 'David Miller',
     image: 'https://randomuser.me/api/portraits/men/45.jpg',
+    read: true,
     messages: [
       { msg: 'Check out this article I found', sent: false },
       { msg: "Looks interesting, I'll read it later", sent: true },
@@ -67,6 +74,7 @@ const conversations: Conversation[] = [
     id: '7',
     name: 'Emma Davis',
     image: 'https://randomuser.me/api/portraits/women/23.jpg',
+    read: true,
     messages: [
       { msg: 'Can you help me with the project?', sent: false },
       { msg: 'Of course! What do you need help with?', sent: true },
@@ -78,6 +86,7 @@ const conversations: Conversation[] = [
     id: '8',
     name: 'Tom Anderson',
     image: 'https://randomuser.me/api/portraits/men/67.jpg',
+    read: true,
     messages: [
       { msg: 'The weather is amazing today!', sent: true },
       { msg: 'Perfect for a walk in the park', sent: false },
@@ -88,6 +97,7 @@ const conversations: Conversation[] = [
     id: '9',
     name: 'Lisa Garcia',
     image: 'https://randomuser.me/api/portraits/women/38.jpg',
+    read: true,
     messages: [
       { msg: 'Did you watch the new episode?', sent: false },
       { msg: 'Not yet! No spoilers please 😅', sent: true },
@@ -98,6 +108,7 @@ const conversations: Conversation[] = [
     id: '10',
     name: 'Chris Taylor',
     image: 'https://randomuser.me/api/portraits/men/89.jpg',
+    read: true,
     messages: [
       { msg: 'Great job on the presentation!', sent: false },
       { msg: 'Thanks! I was really nervous', sent: true },
@@ -106,5 +117,3 @@ const conversations: Conversation[] = [
     ],
   },
 ];
-
-export default conversations;
