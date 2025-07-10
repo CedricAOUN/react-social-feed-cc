@@ -94,6 +94,7 @@ function TabNavigator({ posts }: { posts: Post[] }) {
               navigation={navigation}
               route={route}
               favorites={favorites}
+              posts={posts}
             />
           )}
         />

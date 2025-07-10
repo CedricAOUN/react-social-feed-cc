@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList, ScrollView } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
 import { RouteParamList } from "../routes";
@@ -8,13 +8,26 @@ import React, { useState } from "react";
 
 type Props = NativeStackScreenProps<RouteParamList, "Profile"> & {
   favorites: Post[];
+  posts: Post[];
 };
 
-export default function ProfileScreen({ navigation, favorites }: Props) {
+export default function ProfileScreen({ navigation, favorites, posts }: Props) {
   const [activeTab, setActiveTab] = useState<"images" | "favorites">("images");
+  const currentUserPosts = posts.filter((post) => post.user.name === "John Doe");
 
   const renderFavoriteItem = ({ item }: { item: Post }) => (
     <View style={styles.postContainer}>
+      <Image source={{ uri: item.image }} style={styles.postImage} />
+      <View style={styles.userInfo}>
+        <Image source={{ uri: item.user.avatar }} style={styles.avatar} />
+        <Text style={styles.userName}>{item.user.name}</Text>
+      </View>
+    </View>
+  );
+
+  const renderGalleryItem = ({ item }: { item: Post }) => (
+    <View style={styles.postContainer}>
+      <Text style={styles.userName}>{item.title}</Text>
       <Image source={{ uri: item.image }} style={styles.postImage} />
       <View style={styles.userInfo}>
         <Image source={{ uri: item.user.avatar }} style={styles.avatar} />
@@ -72,33 +85,47 @@ export default function ProfileScreen({ navigation, favorites }: Props) {
   );
 
   const renderEmptyContent = () => (
-    <View style={styles.contentPreview}>
+    <View style={styles.emptyContent}>
       <Text style={styles.previewText}>
-        {activeTab === "images" ? "Galerie d'images" : "Aucun favori pour l'instant"}
+        {activeTab === "images" ? "No images yet" : "No favorites yet"}
       </Text>
     </View>
   );
 
   return (
     <View style={styles.container}>
-      {activeTab === "images" || favorites.length === 0 ? (
-        <FlatList
-          data={[]}
-          renderItem={null}
-          ListHeaderComponent={renderHeader}
-          ListFooterComponent={renderEmptyContent}
-          contentContainerStyle={styles.contentContainer}
-          showsVerticalScrollIndicator={false}
-        />
+      {activeTab === "images" ? (
+        currentUserPosts.length > 0 ? (
+          <FlatList
+            data={currentUserPosts}
+            keyExtractor={(item) => item.id}
+            renderItem={renderGalleryItem}
+            ListHeaderComponent={renderHeader}
+            contentContainerStyle={styles.contentContainer}
+            showsVerticalScrollIndicator={false}
+          />
+        ) : (
+          <ScrollView>
+            {renderHeader()}
+            {renderEmptyContent()}
+          </ScrollView>
+        )
       ) : (
-        <FlatList
-          data={favorites}
-          keyExtractor={(item) => item.id}
-          renderItem={renderFavoriteItem}
-          ListHeaderComponent={renderHeader}
-          contentContainerStyle={styles.contentContainer}
-          showsVerticalScrollIndicator={false}
-        />
+        favorites.length === 0 ? (
+          <ScrollView>
+            {renderHeader()}
+            {renderEmptyContent()}
+          </ScrollView>
+        ) : (
+          <FlatList
+            data={favorites}
+            keyExtractor={(item) => item.id}
+            renderItem={renderFavoriteItem}
+            ListHeaderComponent={renderHeader}
+            contentContainerStyle={styles.contentContainer}
+            showsVerticalScrollIndicator={false}
+          />
+        )
       )}
     </View>
   );
@@ -108,15 +135,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    paddingTop: 60,
-    height: "100%",
   },
   headerContainer: {
     alignItems: "center",
     paddingHorizontal: 20,
+    paddingTop: 20,
   },
   contentContainer: {
     alignItems: "center",
+    paddingBottom: 20,
   },
   avatarWrapper: {
     justifyContent: "center",
@@ -125,7 +152,6 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     height: 60,
     width: 60,
-    marginBottom: 15,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
@@ -142,7 +168,7 @@ const styles = StyleSheet.create({
   name: {
     fontFamily: "Poppins_700Bold",
     fontSize: 20,
-    marginTop: 10,
+    paddingTop: 10,
   },
   handle: {
     fontFamily: "Poppins_400Regular",
@@ -180,12 +206,20 @@ const styles = StyleSheet.create({
     borderColor: "#ddd",
     borderRadius: 10,
   },
+  emptyContent: {
+    display: "flex",
+    flexDirection: "column",
+    height: 200,
+    width: "100%",
+    justifyContent: "flex-start",
+    alignItems: "center",
+  },
   previewText: {
     fontFamily: "Poppins_400Regular",
     fontSize: 14,
     color: "#555",
     textAlign: "center",
-    marginTop: 140,
+    marginTop: 20,
   },
   postContainer: {
     marginBottom: 20,
