@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, FlatList, Image } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { Post } from "./FeedScreen";
+import { Post } from "../types";
 
 type Props = {
   favorites: Post[];
