@@ -1,4 +1,4 @@
-import { Post, Conversation} from './types';
+import { Post, Conversation } from './types';
 
 export type RouteParamList = {
   Tabs: { posts: Post[] };

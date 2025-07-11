@@ -63,12 +63,14 @@ export default function FavoritesScreen({ favorites, onUpdatePost }: ScreenProps
   }));
 
   const handleLike = () => {
-    if (!selectedPost) return;
-    const updatedPost: Post = {
-      ...selectedPost,
-      userHasLiked: !selectedPost.userHasLiked
-    };
-    onUpdatePost(updatedPost);
+    if (selectedPost) {
+      const updatedPost: Post = {
+        ...selectedPost,
+        userHasLiked: !selectedPost.userHasLiked,
+      };
+      setSelectedPost(updatedPost);
+      onUpdatePost(updatedPost);
+    }
   };
 
   const renderItem = ({ item }: { item: Post }) => (

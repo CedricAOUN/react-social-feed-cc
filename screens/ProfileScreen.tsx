@@ -51,7 +51,12 @@ export default function ProfileScreen({
 
   const handleLike = () => {
     if (selectedPost) {
-      onUpdatePost({ ...selectedPost, userHasLiked: !selectedPost.userHasLiked });
+      const updatedPost: Post = {
+        ...selectedPost,
+        userHasLiked: !selectedPost.userHasLiked,
+      };
+      setSelectedPost(updatedPost);
+      onUpdatePost(updatedPost);
 
       scale.value = withSpring(1.3, { damping: 3 }, () => {
         scale.value = withSpring(1, { damping: 5 });
