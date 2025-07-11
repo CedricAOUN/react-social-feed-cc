@@ -1,18 +1,27 @@
-import { StyleSheet, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Alert, View, Image } from "react-native";
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Alert,
+  View,
+  Image,
+} from "react-native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
 import { RouteParamList } from "../routes";
-import * as ImagePicker from 'expo-image-picker';
+import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Post } from "../types";
 
-type Props = NativeStackScreenProps<RouteParamList, 'AddPost'>;
+type Props = NativeStackScreenProps<RouteParamList, "AddPost">;
 
 export default function AddPostScreen({ navigation, route }: Props) {
   const { onAddPost } = route.params;
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [postTitle, setPostTitle] = useState('');
+  const [postTitle, setPostTitle] = useState("");
 
   const handleAddPost = () => {
     if (!postTitle.trim() || !selectedImage) {
@@ -24,12 +33,16 @@ export default function AddPostScreen({ navigation, route }: Props) {
     const post: Post = {
       id: Math.random().toString(36).substring(7), // Generate a random ID
       title: postTitle,
-      image: selectedImage || '',
+      image: selectedImage || "",
       createdAt: new Date().toISOString(),
-      user: { // Our mock current user
-        name: 'John Doe',
-        avatar: 'https://randomuser.me/api/portraits/men/54.jpg',
+      user: {
+        // Our mock current user
+        name: "John Doe",
+        avatar: "https://randomuser.me/api/portraits/men/54.jpg",
       },
+      likes: Math.floor(Math.random() * 100),
+      conversations: Math.floor(Math.random() * 20),
+      follows: Math.floor(Math.random() * 40),
     };
 
     onAddPost(post);
@@ -38,15 +51,19 @@ export default function AddPostScreen({ navigation, route }: Props) {
 
   const pickImage = async () => {
     // Request permission
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    
+    const permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+
     if (permissionResult.granted === false) {
-      Alert.alert("Permission Required", "Permission to access camera roll is required!");
+      Alert.alert(
+        "Permission Required",
+        "Permission to access camera roll is required!"
+      );
       return;
     }
 
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images'],
+      mediaTypes: ["images"],
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
@@ -58,13 +75,17 @@ export default function AddPostScreen({ navigation, route }: Props) {
   };
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior="padding" keyboardVerticalOffset={100}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior="padding"
+      keyboardVerticalOffset={100}
+    >
       {/* Show selected image */}
       {selectedImage && (
         <View style={styles.imageContainer}>
           <Image source={{ uri: selectedImage }} style={styles.selectedImage} />
-          <TouchableOpacity 
-            style={styles.removeImageButton} 
+          <TouchableOpacity
+            style={styles.removeImageButton}
             onPress={() => setSelectedImage(null)}
           >
             <Ionicons name="close" size={24} color="white" />
@@ -80,14 +101,14 @@ export default function AddPostScreen({ navigation, route }: Props) {
       </TouchableOpacity>
 
       <Text style={styles.title}>What's on your mind?</Text>
-      <TextInput 
+      <TextInput
         placeholder="Post title..."
         value={postTitle}
         onChangeText={setPostTitle}
-        style={styles.postTitleInput} 
+        style={styles.postTitleInput}
         maxLength={50}
       />
-      <TouchableOpacity style={styles.addButton} onPress={handleAddPost} >
+      <TouchableOpacity style={styles.addButton} onPress={handleAddPost}>
         <Text style={styles.addButtonText}>Add</Text>
       </TouchableOpacity>
       <StatusBar style="auto" />
@@ -98,55 +119,55 @@ export default function AddPostScreen({ navigation, route }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
   title: {
-    fontFamily: 'Poppins_700Bold',
+    fontFamily: "Poppins_700Bold",
     fontSize: 18,
   },
   postTitleInput: {
-    width: '90%',
+    width: "90%",
     height: 50,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderWidth: 1,
     borderRadius: 10,
     paddingHorizontal: 10,
     marginBottom: 20,
-    fontFamily: 'Poppins_400Regular',
+    fontFamily: "Poppins_400Regular",
   },
   addButton: {
-    width: '90%',
-    backgroundColor: '#404040',
+    width: "90%",
+    backgroundColor: "#404040",
     borderRadius: 10,
     paddingVertical: 15,
-    alignItems: 'center',
+    alignItems: "center",
   },
   addButtonText: {
-    color: '#fff',
-    fontFamily: 'Poppins_700Bold',
+    color: "#fff",
+    fontFamily: "Poppins_700Bold",
   },
   imageButton: {
-    width: '90%',
-    backgroundColor: '#e1f8fc',
+    width: "90%",
+    backgroundColor: "#e1f8fc",
     borderRadius: 10,
     paddingVertical: 15,
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 20,
   },
   imageButtonText: {
-    color: '#404040',
-    fontFamily: 'Poppins_400Regular',
+    color: "#404040",
+    fontFamily: "Poppins_400Regular",
   },
   imageContainer: {
-    width: '90%',
-    alignItems: 'center',
+    width: "90%",
+    alignItems: "center",
     marginBottom: 20,
   },
   removeImageButton: {
-    backgroundColor: '#ff4d4d',
-    position: 'absolute',
+    backgroundColor: "#ff4d4d",
+    position: "absolute",
     right: 0,
     margin: 3,
     borderRadius: 10,
@@ -154,11 +175,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   removeImageText: {
-    color: '#fff',
-    fontFamily: 'Poppins_700Bold',
+    color: "#fff",
+    fontFamily: "Poppins_700Bold",
   },
   selectedImage: {
-    width: '100%',
+    width: "100%",
     height: 200,
     borderRadius: 10,
     marginBottom: 10,
