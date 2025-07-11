@@ -7,7 +7,10 @@
     "server": "json-server --watch mockDb/db.json --port 3000",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "reset-db": "rm -rf mockDb/db.json && cp mockDb/db.json.example mockDb/db.json",
+    "reset-db:cmd": "del mockDb\\db.json && copy mockDb\\db.json.example mockDb\\db.json",
+    "reset-db:powershell": "Remove-Item mockDb\\db.json; Copy-Item mockDb\\db.json.example mockDb\\db.json"
   },
   "dependencies": {
     "@expo-google-fonts/poppins": "^0.4.0",

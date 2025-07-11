@@ -10,6 +10,17 @@ export type Post = {
   userHasLiked?: boolean;
 };
 
+export type Conversation = {
+  id: string;
+  name: string;
+  image: string;
+  read: boolean;
+  messages: {
+    msg: string;
+    sent: boolean;
+  }[];
+};
+
 export type ScreenProps = {
   posts: Post[];
   favorites: Post[];

@@ -1,5 +1,4 @@
-import { Post } from '../types';
-import { Conversation } from './conversations';
+import { Post, Conversation } from '../types';
 
 const PORT = ':3000';
 // CHANGE THIS TO YOUR LOCAL IPV4

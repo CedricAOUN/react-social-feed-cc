@@ -3,14 +3,23 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { StatusBar } from "expo-status-bar";
 import { RouteParamList } from "../routes";
 import { Ionicons } from "@expo/vector-icons";
-import { Conversation, CONVERSATION_DATA } from "../mockDb/conversations";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Conversation } from "../types";
+import { fetchConversations, updateConversation } from "../mockDb/api";
 
 type Props = NativeStackScreenProps<RouteParamList, 'Conversations'>;
 
 export default function ConversationsScreen({ navigation }: Props) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [conversations, setConversations] = useState<Conversation[]>(CONVERSATION_DATA);
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+
+  useEffect(() => {
+    // Simulate fetching conversations from an API or database
+    fetchConversations().then((data) => {
+      setConversations(data);
+    });
+  }, []);
+
 
   const handleOpenChat = (conversation: Conversation) => {
     handleMessagesRead(conversation.id);
@@ -18,15 +27,25 @@ export default function ConversationsScreen({ navigation }: Props) {
   };
 
   const handleMessagesRead = (conversationId: string) => {
-    setConversations(prevConversations => 
-      prevConversations.map(conversation => 
-        conversation.id === conversationId ? { ...conversation, read: true } : conversation
-      )
-    );
+    const conversationToUpdate = conversations.find(c => c.id === conversationId);
+    const updatedConversation = {
+      ...conversationToUpdate,
+      read: true,
+    };
+
+    updateConversation(conversationId, updatedConversation)
+      .then(() => {
+        fetchConversations().then((data) => {
+          setConversations(data);
+        });
+      })
+      .catch(error => {
+        console.error('Error updating conversation:', error);
+      });
   }
 
-  const filteredConversations = conversations.filter(conversation => 
-    conversation.name.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredConversations = conversations?.filter(conversation => 
+    conversation?.name?.toLowerCase()?.includes(searchQuery.toLowerCase())
   );
 
   const renderConversationItem = ({ item, index }: { item: Conversation, index: number }) => (

@@ -11,7 +11,6 @@ import {
 import AddPostScreen from "./screens/AddPostScreen";
 import TabNavigator from "./components/TabNavigator";
 import { useEffect, useMemo, useState } from "react";
-import POSTS from "./mockDb/posts";
 import { Post } from "./types";
 import { createPost, fetchPosts, updatePost } from "./mockDb/api";
 import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
@@ -19,7 +18,7 @@ import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 const Stack = createNativeStackNavigator<RouteParamList>();
 
 function App() {
-  const [posts, setPosts] = useState(POSTS); // Initialize posts state
+  const [posts, setPosts] = useState<Post[]>([]); // Initialize posts state
   const [favorites, setFavorites] = useState<Post[]>([]); // Initialize favorites state
 
   const [fontsLoaded] = useFonts({
