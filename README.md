@@ -2,6 +2,7 @@
 
 - Open 2 terminals/cmdlines
 - Get your local IPV4 address with `ipconfig`(Windows) or `ip -4 a`(Linux)
+- Alternatively, your public IPV4 could work: [whatismyip.com](https://whatismyipaddress.com/)
 - Set `API_URL` in file `api.ts` as the IPv4 address of your machine.
 - Exec `npm run start` in a terminal
 - Exec `npm run server` in the other terminal
