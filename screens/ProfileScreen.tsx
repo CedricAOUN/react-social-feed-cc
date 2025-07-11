@@ -3,7 +3,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
 import { RouteParamList } from "../routes";
 import { Ionicons } from "@expo/vector-icons";
-import { Post } from "../types";
+import { Post, ScreenProps } from "../types";
 import React, { useState, useEffect } from "react";
 import Animated, { useSharedValue, withSpring, useAnimatedStyle } from "react-native-reanimated";
 
@@ -27,17 +27,14 @@ const timeSince = (dateString: string): string => {
   }
 };
 
-type Props = NativeStackScreenProps<RouteParamList, "Profile"> & {
-  favorites: Post[];
-  posts: Post[];
-  toggleFavorite: (post: Post) => void;
-};
+type Props = NativeStackScreenProps<RouteParamList, "Profile"> & ScreenProps;
+
 
 export default function ProfileScreen({
   navigation,
   favorites,
   posts,
-  toggleFavorite,
+  onUpdatePost,
 }: Props) {
   const [activeTab, setActiveTab] = useState<"images" | "favorites">("images");
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
@@ -46,7 +43,7 @@ export default function ProfileScreen({
 
   const scale = useSharedValue(1);
 
-  const currentUserPosts = posts.filter((post) => post.user.name === "John Doe");
+  const currentUserPosts = posts?.filter((post) => post.user.name === "John Doe");
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
@@ -54,7 +51,8 @@ export default function ProfileScreen({
 
   const handleLike = () => {
     if (selectedPost) {
-      toggleFavorite(selectedPost);
+      onUpdatePost({ ...selectedPost, userHasLiked: !selectedPost.userHasLiked });
+
       scale.value = withSpring(1.3, { damping: 3 }, () => {
         scale.value = withSpring(1, { damping: 5 });
       });

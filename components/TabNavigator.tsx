@@ -9,19 +9,19 @@ import AddPostScreen from "../screens/AddPostScreen";
 import CustomButton from "./CustomButton";
 import FavoriteScreen from "../screens/FavoriteScreen";
 import ProfileScreen from "../screens/ProfileScreen";
-import { NativeStackScreenProps } from "react-native-screens/lib/typescript/native-stack/types";
+import { fetchPosts, updatePost } from "../mockDb/api";
 
 const Tab = createBottomTabNavigator<RouteParamList>();
 
-function TabNavigator({ posts }: { posts: Post[] }) {
-  const [favorites, setFavorites] = useState<Post[]>([]);
+function TabNavigator({ posts, onPostUpdate, favorites }: { posts: Post[]; onPostUpdate: (posts: Post[]) => void; favorites: Post[] }) {
 
-  const toggleFavorite = (post: Post) => {
-    setFavorites((prev) =>
-      prev.some((p) => p.id === post.id)
-        ? prev.filter((p) => p.id !== post.id)
-        : [...prev, post]
-    );
+    // toggleFavorite qui ajoute ou enlève un post des favoris
+  const handleUpdatePost = (post: Post) => {
+    updatePost(post.id, post).then(() => {
+      fetchPosts().then((data) => {
+        onPostUpdate(data);
+      });
+    });
   };
 
   return (
@@ -44,9 +44,9 @@ function TabNavigator({ posts }: { posts: Post[] }) {
         name="Feed"
         children={() => (
           <FeedScreen
-            posts={posts}
             favorites={favorites}
-            toggleFavorite={toggleFavorite}
+            posts={posts}
+            onUpdatePost={handleUpdatePost}
           />
         )}
         options={{
@@ -76,7 +76,8 @@ function TabNavigator({ posts }: { posts: Post[] }) {
         children={() => (
           <FavoriteScreen
             favorites={favorites}
-            toggleFavorite={toggleFavorite}
+            posts={posts}
+            onUpdatePost={handleUpdatePost}
           />
         )}
         options={{
@@ -94,7 +95,7 @@ function TabNavigator({ posts }: { posts: Post[] }) {
             route={route}
             favorites={favorites}
             posts={posts}
-            toggleFavorite={toggleFavorite}
+            onUpdatePost={handleUpdatePost}
           />
         )}
         options={{

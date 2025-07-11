@@ -16,7 +16,7 @@ import Animated, {
   withSpring,
   useAnimatedStyle,
 } from "react-native-reanimated";
-import { Post } from "../types";
+import { Post, ScreenProps } from "../types";
 
 const timeSince = (dateString: string): string => {
   const date = new Date(dateString);
@@ -38,21 +38,11 @@ const timeSince = (dateString: string): string => {
   }
 };
 
-type Props = {
-  posts: Post[];
-  favorites: Post[];
-  toggleFavorite: (post: Post) => void;
-};
-
 const { width } = Dimensions.get("window");
 const IMAGE_WIDTH = width * 0.9;
 const IMAGE_HEIGHT = IMAGE_WIDTH * 0.75;
 
-export default function FeedScreen({
-  posts,
-  favorites,
-  toggleFavorite,
-}: Props) {
+export default function FeedScreen({ posts, favorites, onUpdatePost }: ScreenProps) {
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
   const [stats, setStats] = useState<{
     likes: number;
@@ -80,7 +70,12 @@ export default function FeedScreen({
 
   const handleLike = () => {
     if (selectedPost) {
-      toggleFavorite(selectedPost);
+      const updatedPost: Post = {
+        ...selectedPost,
+        userHasLiked: !selectedPost.userHasLiked,
+      };
+      setSelectedPost(updatedPost);
+      onUpdatePost(updatedPost);
       scale.value = withSpring(1.3, { damping: 3 }, () => {
         scale.value = withSpring(1, { damping: 5 });
       });
@@ -93,6 +88,13 @@ export default function FeedScreen({
         <Image source={{ uri: item.image }} style={styles.postImage} />
       </TouchableOpacity>
 
+      <View style={styles.userInfo}>
+        <Image source={{ uri: item.user.avatar }} style={styles.avatar} />
+        <View style={{ marginLeft: 8 }}>
+          <Text style={styles.userName}>{item.user.name}</Text>
+          <Text style={styles.timeAgo}>{timeSince(item.createdAt)}</Text>
+        </View>
+      </View>
       <View style={styles.userInfo}>
         <Image source={{ uri: item.user.avatar }} style={styles.avatar} />
         <View style={{ marginLeft: 8 }}>

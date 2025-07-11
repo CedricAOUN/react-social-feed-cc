@@ -15,7 +15,7 @@ import Animated, {
   withSpring,
   useAnimatedStyle,
 } from "react-native-reanimated";
-import { Post } from "../types";
+import { Post, ScreenProps } from "../types";
 
 const { width } = Dimensions.get("window");
 const IMAGE_WIDTH = width * 0.9;
@@ -36,12 +36,7 @@ const timeSince = (dateString: string): string => {
   return "just now";
 };
 
-type Props = {
-  favorites: Post[];
-  toggleFavorite: (post: Post) => void;
-};
-
-export default function FavoritesScreen({ favorites, toggleFavorite }: Props) {
+export default function FavoritesScreen({ favorites, onUpdatePost }: ScreenProps) {
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
   const [stats, setStats] = useState<{
     likes: number;
@@ -68,12 +63,12 @@ export default function FavoritesScreen({ favorites, toggleFavorite }: Props) {
   }));
 
   const handleLike = () => {
-    if (selectedPost) {
-      toggleFavorite(selectedPost);
-      scale.value = withSpring(1.3, { damping: 3 }, () => {
-        scale.value = withSpring(1, { damping: 5 });
-      });
-    }
+    if (!selectedPost) return;
+    const updatedPost: Post = {
+      ...selectedPost,
+      userHasLiked: !selectedPost.userHasLiked
+    };
+    onUpdatePost(updatedPost);
   };
 
   const renderItem = ({ item }: { item: Post }) => (
@@ -95,7 +90,7 @@ export default function FavoritesScreen({ favorites, toggleFavorite }: Props) {
   return (
     <View style={styles.container}>
       <FlatList
-        data={favorites}
+        data={favorites || []}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
         contentContainerStyle={{ paddingTop: 20 }}
@@ -143,7 +138,7 @@ export default function FavoritesScreen({ favorites, toggleFavorite }: Props) {
                     <Animated.View style={animatedStyle}>
                       <Ionicons
                         name={
-                          favorites.some((p) => p.id === selectedPost.id)
+                          (favorites || []).some((p) => p.id === selectedPost?.id)
                             ? "heart"
                             : "heart-outline"
                         }

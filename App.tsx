@@ -10,39 +10,43 @@ import {
 } from "@expo-google-fonts/poppins";
 import AddPostScreen from "./screens/AddPostScreen";
 import TabNavigator from "./components/TabNavigator";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import POSTS from "./mockDb/posts";
 import { Post } from "./types";
+import { createPost, fetchPosts, updatePost } from "./mockDb/api";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 const Stack = createNativeStackNavigator<RouteParamList>();
 
 function App() {
   const [posts, setPosts] = useState(POSTS); // Initialize posts state
-  const [favorites, setFavorites] = useState<Post[]>([]); // <-- Ajouté favorites state ici
+  const [favorites, setFavorites] = useState<Post[]>([]); // Initialize favorites state
 
   const [fontsLoaded] = useFonts({
     Poppins_400Regular,
     Poppins_700Bold,
   });
 
+  useEffect(() => {
+    // Simulate fetching posts from an API or database
+    fetchPosts().then((data) => {
+      setPosts(data);
+    });
+  }, []);
+
+  useMemo(() => {
+    setFavorites(posts.filter((p) => p.userHasLiked));
+  }, [posts]);
+
   if (!fontsLoaded) {
     return null; // or a loading indicator
   }
 
   const handleAddPost = (post: Post) => {
-    setPosts((prevPosts) => [post, ...prevPosts]);
-  };
-
-  // toggleFavorite qui ajoute ou enlève un post des favoris
-  const toggleFavorite = (post: Post) => {
-    setFavorites((prevFavorites) => {
-      if (prevFavorites.some((p) => p.id === post.id)) {
-        // Retirer des favoris
-        return prevFavorites.filter((p) => p.id !== post.id);
-      } else {
-        // Ajouter aux favoris
-        return [...prevFavorites, post];
-      }
+    createPost(post).then(() => {
+      fetchPosts().then((data) => {
+        setPosts(data);
+      });
     });
   };
 
@@ -52,7 +56,7 @@ function App() {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen
           name="Tabs"
-          children={() => <TabNavigator posts={posts} />}
+          children={() => <TabNavigator posts={posts} onPostUpdate={setPosts} favorites={favorites} />}
         />
         <Stack.Screen
           name="AddPost"

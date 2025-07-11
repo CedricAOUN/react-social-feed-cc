@@ -6,5 +6,12 @@ export type Post = {
     avatar: string;
   };
   image: string;
-  createdAt: string; 
+  createdAt: string;
+  userHasLiked?: boolean;
+};
+
+export type ScreenProps = {
+  posts: Post[];
+  favorites: Post[];
+  onUpdatePost: (post: Post) => void;
 };
