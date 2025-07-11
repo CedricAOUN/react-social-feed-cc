@@ -1,5 +1,4 @@
-import { Conversation } from './mockDb/conversations';
-import { Post } from './types';
+import { Post, Conversation} from './types';
 
 export type RouteParamList = {
   Tabs: { posts: Post[] };
