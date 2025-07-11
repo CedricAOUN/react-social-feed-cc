@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import Animated, {
   useSharedValue,
@@ -17,6 +17,7 @@ import Animated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 import { Post, ScreenProps } from "../types";
+
 
 const timeSince = (dateString: string): string => {
   const date = new Date(dateString);
@@ -42,25 +43,17 @@ const { width } = Dimensions.get("window");
 const IMAGE_WIDTH = width * 0.9;
 const IMAGE_HEIGHT = IMAGE_WIDTH * 0.75;
 
-export default function FeedScreen({ posts, favorites, onUpdatePost }: ScreenProps) {
+export default function FeedScreen({
+  posts,
+  favorites,
+  onUpdatePost,
+}: ScreenProps) {
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
   const [stats, setStats] = useState<{
     likes: number;
     conversations: number;
     follows: number;
   } | null>(null);
-
-  useEffect(() => {
-    if (selectedPost) {
-      setStats({
-        likes: Math.floor(Math.random() * 100),
-        conversations: Math.floor(Math.random() * 100),
-        follows: Math.floor(Math.random() * 100),
-      });
-    } else {
-      setStats(null);
-    }
-  }, [selectedPost]);
 
   const scale = useSharedValue(1);
 
@@ -73,6 +66,9 @@ export default function FeedScreen({ posts, favorites, onUpdatePost }: ScreenPro
       const updatedPost: Post = {
         ...selectedPost,
         userHasLiked: !selectedPost.userHasLiked,
+        likes: selectedPost.userHasLiked
+          ? (selectedPost.likes ?? 0) - 1
+          : (selectedPost.likes ?? 0) + 1,
       };
       setSelectedPost(updatedPost);
       onUpdatePost(updatedPost);
@@ -95,15 +91,10 @@ export default function FeedScreen({ posts, favorites, onUpdatePost }: ScreenPro
           <Text style={styles.timeAgo}>{timeSince(item.createdAt)}</Text>
         </View>
       </View>
-      <View style={styles.userInfo}>
-        <Image source={{ uri: item.user.avatar }} style={styles.avatar} />
-        <View style={{ marginLeft: 8 }}>
-          <Text style={styles.userName}>{item.user.name}</Text>
-          <Text style={styles.timeAgo}>{timeSince(item.createdAt)}</Text>
-        </View>
-      </View>
     </View>
   );
+
+  console.log("Selected Post:", selectedPost);
 
   return (
     <View style={styles.container}>
@@ -133,19 +124,19 @@ export default function FeedScreen({ posts, favorites, onUpdatePost }: ScreenPro
                     <View style={styles.statColumn}>
                       <Text style={styles.statLabel}>Likes</Text>
                       <Text style={styles.statValue}>
-                        {stats ? stats.likes : "..."}
+                        {selectedPost.likes}
                       </Text>
                     </View>
                     <View style={styles.statColumn}>
                       <Text style={styles.statLabel}>Conversations</Text>
                       <Text style={styles.statValue}>
-                        {stats ? stats.conversations : "..."}
+                        {selectedPost.conversations}
                       </Text>
                     </View>
                     <View style={styles.statColumn}>
                       <Text style={styles.statLabel}>Follows</Text>
                       <Text style={styles.statValue}>
-                        {stats ? stats.follows : "..."}
+                        {selectedPost.follows}
                       </Text>
                     </View>
                   </View>

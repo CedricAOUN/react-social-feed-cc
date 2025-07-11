@@ -8,7 +8,7 @@ import {
   Modal,
   Dimensions,
 } from "react-native";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import Animated, {
   useSharedValue,
@@ -36,25 +36,16 @@ const timeSince = (dateString: string): string => {
   return "just now";
 };
 
-export default function FavoritesScreen({ favorites, onUpdatePost }: ScreenProps) {
+export default function FavoritesScreen({
+  favorites,
+  onUpdatePost,
+}: ScreenProps) {
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
   const [stats, setStats] = useState<{
     likes: number;
     conversations: number;
     follows: number;
   } | null>(null);
-
-  useEffect(() => {
-    if (selectedPost) {
-      setStats({
-        likes: Math.floor(Math.random() * 100),
-        conversations: Math.floor(Math.random() * 100),
-        follows: Math.floor(Math.random() * 100),
-      });
-    } else {
-      setStats(null);
-    }
-  }, [selectedPost]);
 
   const scale = useSharedValue(1);
 
@@ -67,9 +58,22 @@ export default function FavoritesScreen({ favorites, onUpdatePost }: ScreenProps
       const updatedPost: Post = {
         ...selectedPost,
         userHasLiked: !selectedPost.userHasLiked,
+        likes: selectedPost.userHasLiked
+          ? (selectedPost.likes ?? 0) - 1
+          : (selectedPost.likes ?? 0) + 1,
       };
       setSelectedPost(updatedPost);
+      setStats(
+        (prev) =>
+          prev && {
+            ...prev,
+            likes: updatedPost.likes,
+          }
+      );
       onUpdatePost(updatedPost);
+      scale.value = withSpring(1.3, { damping: 3 }, () => {
+        scale.value = withSpring(1, { damping: 5 });
+      });
     }
   };
 
@@ -115,20 +119,20 @@ export default function FavoritesScreen({ favorites, onUpdatePost }: ScreenProps
                   <View style={styles.statsRow}>
                     <View style={styles.statColumn}>
                       <Text style={styles.statLabel}>Likes</Text>
-                      <Text style={styles.statValue}>
-                        {stats ? stats.likes : "..."}
-                      </Text>
+                      <Text style={styles.statValue}>{selectedPost.likes}</Text>
                     </View>
                     <View style={styles.statColumn}>
                       <Text style={styles.statLabel}>Conversations</Text>
                       <Text style={styles.statValue}>
-                        {stats ? stats.conversations : "..."}
+                        {selectedPost.conversations}
                       </Text>
                     </View>
                     <View style={styles.statColumn}>
                       <Text style={styles.statLabel}>Follows</Text>
-                      <Text style={styles.statValue}>
-                        {stats ? stats.follows : "..."}
+                      <Text style={styles.statValue}> 
+                        <Text style={styles.statValue}>
+                          {selectedPost.follows}
+                        </Text>
                       </Text>
                     </View>
                   </View>
@@ -140,7 +144,9 @@ export default function FavoritesScreen({ favorites, onUpdatePost }: ScreenProps
                     <Animated.View style={animatedStyle}>
                       <Ionicons
                         name={
-                          (favorites || []).some((p) => p.id === selectedPost?.id)
+                          (favorites || []).some(
+                            (p) => p.id === selectedPost?.id
+                          )
                             ? "heart"
                             : "heart-outline"
                         }

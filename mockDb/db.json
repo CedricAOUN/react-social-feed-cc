@@ -9,7 +9,7 @@
       "image": "https://picsum.photos/id/1011/400/300",
       "createdAt": "2025-03-18T00:00:00.000Z",
       "userHasLiked": true,
-      "likes": 54,
+      "likes": 55,
       "conversations": 8,
       "follows": 33
     },
@@ -23,7 +23,7 @@
       "createdAt": "2025-06-24T06:00:00.000Z",
       "userHasLiked": false,
       "likes": 86,
-      "conversations": 4,
+      "conversations": 17,
       "follows": 24
     },
     {
@@ -34,7 +34,10 @@
       },
       "image": "https://picsum.photos/id/1016/400/300",
       "createdAt": "2025-07-11T03:00:00.000Z",
-      "userHasLiked": false
+      "userHasLiked": false,
+      "likes": 43,
+      "conversations": 9,
+      "follows": 19
     }
   ],
   "conversations": [

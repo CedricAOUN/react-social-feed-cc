@@ -8,7 +8,7 @@
       },
       "image": "https://picsum.photos/id/1011/400/300",
       "createdAt": "2025-03-18T00:00:00.000Z",
-      "userHasLiked": true,
+      "userHasLiked": false,
       "likes": 54,
       "conversations": 8,
       "follows": 33
@@ -23,7 +23,7 @@
       "createdAt": "2025-06-24T06:00:00.000Z",
       "userHasLiked": false,
       "likes": 86,
-      "conversations": 4,
+      "conversations": 17,
       "follows": 24
     },
     {
@@ -34,10 +34,10 @@
       },
       "image": "https://picsum.photos/id/1016/400/300",
       "createdAt": "2025-07-11T03:00:00.000Z",
-      "userHasLiked": false,
-      "likes": 111,
-      "conversations": 24,
-      "follows": 46
+      "userHasLiked": true,
+      "likes": 42,
+      "conversations": 9,
+      "follows": 19
     }
   ],
   "conversations": [
@@ -45,7 +45,7 @@
       "id": "1",
       "name": "John Doe",
       "image": "https://randomuser.me/api/portraits/men/1.jpg",
-      "read": false,
+      "read": true,
       "messages": [
         {
           "msg": "Hey, how are you?",

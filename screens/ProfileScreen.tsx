@@ -1,11 +1,24 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList, ScrollView, Modal } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  FlatList,
+  ScrollView,
+  Modal,
+} from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
 import { RouteParamList } from "../routes";
 import { Ionicons } from "@expo/vector-icons";
 import { Post, ScreenProps } from "../types";
-import React, { useState, useEffect } from "react";
-import Animated, { useSharedValue, withSpring, useAnimatedStyle } from "react-native-reanimated";
+import React, { useState } from "react";
+import Animated, {
+  useSharedValue,
+  withSpring,
+  useAnimatedStyle,
+} from "react-native-reanimated";
 
 const timeSince = (dateString: string): string => {
   const date = new Date(dateString);
@@ -29,7 +42,6 @@ const timeSince = (dateString: string): string => {
 
 type Props = NativeStackScreenProps<RouteParamList, "Profile"> & ScreenProps;
 
-
 export default function ProfileScreen({
   navigation,
   favorites,
@@ -38,12 +50,18 @@ export default function ProfileScreen({
 }: Props) {
   const [activeTab, setActiveTab] = useState<"images" | "favorites">("images");
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
-  
-  const [stats, setStats] = useState<{ likes: number; conversations: number; follows: number } | null>(null);
+
+  const [stats, setStats] = useState<{
+    likes: number;
+    conversations: number;
+    follows: number;
+  } | null>(null);
 
   const scale = useSharedValue(1);
 
-  const currentUserPosts = posts?.filter((post) => post.user.name === "John Doe");
+  const currentUserPosts = posts?.filter(
+    (post) => post.user.name === "John Doe"
+  );
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
@@ -54,49 +72,49 @@ export default function ProfileScreen({
       const updatedPost: Post = {
         ...selectedPost,
         userHasLiked: !selectedPost.userHasLiked,
+        likes: selectedPost.userHasLiked
+          ? (selectedPost.likes ?? 0) - 1
+          : (selectedPost.likes ?? 0) + 1,
       };
       setSelectedPost(updatedPost);
       onUpdatePost(updatedPost);
-
       scale.value = withSpring(1.3, { damping: 3 }, () => {
         scale.value = withSpring(1, { damping: 5 });
       });
     }
   };
 
-  useEffect(() => {
-    if (selectedPost) {
-      setStats({
-        likes: Math.floor(Math.random() * 100),
-        conversations: Math.floor(Math.random() * 100),
-        follows: Math.floor(Math.random() * 100),
-      });
-    } else {
-      setStats(null);
-    }
-  }, [selectedPost]);
-
   const renderGalleryItem = ({ item }: { item: Post }) => (
-    <TouchableOpacity onPress={() => setSelectedPost(item)} style={styles.postContainer}>
+    <TouchableOpacity
+      onPress={() => setSelectedPost(item)}
+      style={styles.postContainer}
+    >
       <Image source={{ uri: item.image }} style={styles.favoriteImage} />
       <View style={styles.favoriteUserInfo}>
         <Image source={{ uri: item.user.avatar }} style={styles.avatar} />
         <View style={{ marginLeft: 8 }}>
           <Text style={styles.favoriteUserName}>{item.user.name}</Text>
-          <Text style={styles.favoriteTimeAgo}>{timeSince(item.createdAt)}</Text>
+          <Text style={styles.favoriteTimeAgo}>
+            {timeSince(item.createdAt)}
+          </Text>
         </View>
       </View>
     </TouchableOpacity>
   );
 
   const renderFavoriteItem = ({ item }: { item: Post }) => (
-    <TouchableOpacity onPress={() => setSelectedPost(item)} style={styles.postContainer}>
+    <TouchableOpacity
+      onPress={() => setSelectedPost(item)}
+      style={styles.postContainer}
+    >
       <Image source={{ uri: item.image }} style={styles.favoriteImage} />
       <View style={styles.favoriteUserInfo}>
         <Image source={{ uri: item.user.avatar }} style={styles.avatar} />
         <View style={{ marginLeft: 8 }}>
           <Text style={styles.favoriteUserName}>{item.user.name}</Text>
-          <Text style={styles.favoriteTimeAgo}>{timeSince(item.createdAt)}</Text>
+          <Text style={styles.favoriteTimeAgo}>
+            {timeSince(item.createdAt)}
+          </Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -207,20 +225,18 @@ export default function ProfileScreen({
                   <View style={styles.statsRow}>
                     <View style={styles.statColumn}>
                       <Text style={styles.statLabel}>Likes</Text>
-                      <Text style={styles.statValue}>
-                        {stats ? stats.likes : "..."}
-                      </Text>
+                      <Text style={styles.statValue}>{selectedPost.likes}</Text>
                     </View>
                     <View style={styles.statColumn}>
                       <Text style={styles.statLabel}>Conversations</Text>
                       <Text style={styles.statValue}>
-                        {stats ? stats.conversations : "..."}
+                        {selectedPost.conversations}
                       </Text>
                     </View>
                     <View style={styles.statColumn}>
                       <Text style={styles.statLabel}>Follows</Text>
                       <Text style={styles.statValue}>
-                        {stats ? stats.follows : "..."}
+                        {selectedPost.follows}
                       </Text>
                     </View>
                   </View>
