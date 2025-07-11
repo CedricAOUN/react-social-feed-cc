@@ -7,6 +7,8 @@
 - Exec `npm run start` in a terminal
 - Exec `npm run server` in the other terminal
 
+Project should now be up and running.
+
 ## Resetting DB
 
 To reset DB to original state, run one of the following commands:
@@ -14,4 +16,4 @@ To reset DB to original state, run one of the following commands:
 - Windows CMD: `npm run reset-db:cmd`
 - Windows Powershell: `npm run reset-db:powershell`
 
-Project should now be up and running.
+
