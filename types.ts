@@ -8,6 +8,9 @@ export type Post = {
   image: string;
   createdAt: string;
   userHasLiked?: boolean;
+  likes: number;
+  conversations: number;
+  follows: number;
 };
 
 export type Conversation = {

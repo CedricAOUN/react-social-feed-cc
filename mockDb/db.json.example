@@ -7,8 +7,11 @@
         "avatar": "https://randomuser.me/api/portraits/women/44.jpg"
       },
       "image": "https://picsum.photos/id/1011/400/300",
-      "createdAt": "2025-07-11T00:00:00.000Z",
-      "userHasLiked": false
+      "createdAt": "2025-03-18T00:00:00.000Z",
+      "userHasLiked": true,
+      "likes": 54,
+      "conversations": 8,
+      "follows": 33
     },
     {
       "id": "2",
@@ -17,8 +20,11 @@
         "avatar": "https://randomuser.me/api/portraits/men/36.jpg"
       },
       "image": "https://picsum.photos/id/1015/400/300",
-      "createdAt": "2025-07-11T00:00:00.000Z",
-      "userHasLiked": false
+      "createdAt": "2025-06-24T06:00:00.000Z",
+      "userHasLiked": false,
+      "likes": 86,
+      "conversations": 4,
+      "follows": 24
     },
     {
       "id": "3",
@@ -27,8 +33,11 @@
         "avatar": "https://randomuser.me/api/portraits/women/65.jpg"
       },
       "image": "https://picsum.photos/id/1016/400/300",
-      "createdAt": "2025-07-11T00:00:00.000Z",
-      "userHasLiked": false
+      "createdAt": "2025-07-11T03:00:00.000Z",
+      "userHasLiked": false,
+      "likes": 111,
+      "conversations": 24,
+      "follows": 46
     }
   ],
   "conversations": [
@@ -52,7 +61,7 @@
       "id": "2",
       "name": "Jane Smith",
       "image": "https://randomuser.me/api/portraits/women/44.jpg",
-      "read": false,
+      "read": true,
       "messages": [
         {
           "msg": "Let's catch up soon!",
@@ -65,7 +74,7 @@
       ]
     },
     {
-      "read": false,
+      "read": true,
       "name": "Alex Johnson",
       "image": "https://randomuser.me/api/portraits/men/3.jpg",
       "id": "3",
