@@ -45,7 +45,7 @@
       "id": "1",
       "name": "John Doe",
       "image": "https://randomuser.me/api/portraits/men/1.jpg",
-      "read": true,
+      "read": false,
       "messages": [
         {
           "msg": "Hey, how are you?",
@@ -61,7 +61,7 @@
       "id": "2",
       "name": "Jane Smith",
       "image": "https://randomuser.me/api/portraits/women/44.jpg",
-      "read": true,
+      "read": false,
       "messages": [
         {
           "msg": "Let's catch up soon!",
@@ -74,10 +74,11 @@
       ]
     },
     {
-      "read": true,
+      "read": false,
       "name": "Alex Johnson",
       "image": "https://randomuser.me/api/portraits/men/3.jpg",
       "id": "3",
+      "read": false,
       "messages": [
         {
           "msg": "Did you finish the report?",
