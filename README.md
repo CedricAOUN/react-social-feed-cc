@@ -9,7 +9,7 @@
 
 ## Resetting DB
 
-To reset DB to original state, run one of the following command in the root:
+To reset DB to original state, run one of the following commands:
 - Linux/Bash/Mac: `npm run reset-db`
 - Windows CMD: `npm run reset-db:cmd`
 - Windows Powershell: `npm run reset-db:powershell`
