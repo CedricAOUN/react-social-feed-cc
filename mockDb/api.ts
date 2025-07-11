@@ -1,14 +1,19 @@
 import { Post, Conversation } from '../types';
 
 const PORT = ':3000';
+
 // CHANGE THIS TO YOUR LOCAL IPV4
-const API_URL = 'http://192.168.1.126' + PORT;
+// e.g: 'http://192.168.1.20';
+const API_URL = '';
+
+const API_URL_PORT = API_URL + PORT;
+
 const CONVERSATION_ROUTE = '/conversations';
 const POST_ROUTE = '/posts';
 
 export const fetchPosts = async () => {
   try {
-    const response = await fetch(`${API_URL}${POST_ROUTE}`);
+    const response = await fetch(`${API_URL_PORT}${POST_ROUTE}`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -24,12 +29,12 @@ export const fetchPosts = async () => {
 };
 
 export const fetchConversations = async () => {
-  const response = await fetch(`${API_URL}${CONVERSATION_ROUTE}`);
+  const response = await fetch(`${API_URL_PORT}${CONVERSATION_ROUTE}`);
   return response.json();
 };
 
 export const fetchPostById = async (id: string) => {
-  const response = await fetch(`${API_URL}${POST_ROUTE}/${id}`);
+  const response = await fetch(`${API_URL_PORT}${POST_ROUTE}/${id}`);
   if (!response.ok) {
     throw new Error(`Post with id ${id} not found`);
   }
@@ -37,7 +42,7 @@ export const fetchPostById = async (id: string) => {
 };
 
 export const fetchConversationById = async (id: string) => {
-  const response = await fetch(`${API_URL}${CONVERSATION_ROUTE}/${id}`);
+  const response = await fetch(`${API_URL_PORT}${CONVERSATION_ROUTE}/${id}`);
   if (!response.ok) {
     throw new Error(`Conversation with id ${id} not found`);
   }
@@ -45,7 +50,7 @@ export const fetchConversationById = async (id: string) => {
 };
 
 export const createPost = async (post: Post) => {
-  const response = await fetch(`${API_URL}${POST_ROUTE}`, {
+  const response = await fetch(`${API_URL_PORT}${POST_ROUTE}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -57,7 +62,7 @@ export const createPost = async (post: Post) => {
 
 export const updatePost = async (id: string, post: Partial<Post>) => {
   console.log('Updating post with id:', id, 'and data:', post);
-  const response = await fetch(`${API_URL}${POST_ROUTE}/${id}`, {
+  const response = await fetch(`${API_URL_PORT}${POST_ROUTE}/${id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -71,7 +76,7 @@ export const updateConversation = async (
   id: string,
   conversation: Partial<Conversation>
 ) => {
-  const response = await fetch(`${API_URL}${CONVERSATION_ROUTE}/${id}`, {
+  const response = await fetch(`${API_URL_PORT}${CONVERSATION_ROUTE}/${id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
